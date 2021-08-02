@@ -9,6 +9,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
 typedef RefreshCallback = Future<void> Function();
+typedef RefreshIndicatorExtendCallback = void Function(bool isExtend, double extendHeight);
 
 class DropDownRefreshAnimateWidget extends StatefulWidget {
   final double dropProgress;
@@ -217,6 +218,7 @@ class CustomCupertinoSliverRefreshControl extends StatefulWidget {
     this.refreshIndicatorExtent = _defaultRefreshIndicatorExtent,
     this.builder = dropDownRefreshContent,
     this.onRefresh,
+    this.refreshIndicatorExtendCallback,
   })  : assert(refreshTriggerPullDistance != null),
         assert(refreshTriggerPullDistance > 0.0),
         assert(refreshIndicatorExtent != null),
@@ -233,6 +235,8 @@ class CustomCupertinoSliverRefreshControl extends StatefulWidget {
 
   final RefreshControlIndicatorBuilder? builder;
   final RefreshCallback? onRefresh;
+
+  final RefreshIndicatorExtendCallback? refreshIndicatorExtendCallback;
 
   static const double _defaultRefreshTriggerPullDistance = 100.0;
   static const double _defaultRefreshIndicatorExtent = 60.0;
@@ -282,7 +286,14 @@ class _CustomCupertinoSliverRefreshControlState extends State<CustomCupertinoSli
 
   Future<void>? refreshTask;
   double latestIndicatorBoxExtent = 0.0;
-  bool hasSliverLayoutExtent = false;
+  bool _hasSliverLayoutExtent = false;
+  bool get hasSliverLayoutExtent => _hasSliverLayoutExtent;
+  set hasSliverLayoutExtent(bool value) {
+    _hasSliverLayoutExtent = value;
+    if (widget.refreshIndicatorExtendCallback != null) {
+      widget.refreshIndicatorExtendCallback!(value, widget.refreshIndicatorExtent);
+    }
+  }
 
   @override
   void initState() {

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_yanxuan/common/colors.dart';
+import 'package:flutter_yanxuan/page/home/model/home_model.dart';
+import 'package:provider/provider.dart';
 
 class HomeCategoryWidget extends StatefulWidget {
   @override
@@ -25,9 +27,10 @@ class _HomeCategoryWidgetState extends State<HomeCategoryWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final module = context.select<HomePageModel, HomeCategoryModule>((value) => value.categoryModule);
     return Column(
       children: [
-        categoryWidget(context),
+        categoryWidget(context, module),
         Container(
           height: 20,
           child: Center(
@@ -44,7 +47,9 @@ class _HomeCategoryWidgetState extends State<HomeCategoryWidget> {
                     child: Container(
                       width: 18,
                       height: 2,
-                      decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(1)), color: redColor),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(1)),
+                      ),
                     ),
                   ),
                 ),
@@ -56,7 +61,7 @@ class _HomeCategoryWidgetState extends State<HomeCategoryWidget> {
     );
   }
 
-  Widget categoryWidget(BuildContext context) {
+  Widget categoryWidget(BuildContext context, HomeCategoryModule module) {
     return ClipRRect(
       borderRadius: BorderRadius.all(
         Radius.circular(10),
@@ -65,7 +70,6 @@ class _HomeCategoryWidgetState extends State<HomeCategoryWidget> {
         height: 180,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(10)),
-          color: Colors.red,
         ),
         child: GridView.builder(
           scrollDirection: Axis.horizontal,
@@ -78,25 +82,40 @@ class _HomeCategoryWidgetState extends State<HomeCategoryWidget> {
           ),
           itemCount: 20,
           itemBuilder: (context, index) {
-            return Container(
-              color: Colors.blue,
-              child: Column(
-                children: [
-                  Container(
-                    width: 45,
-                    height: 65,
-                    color: Colors.yellow,
-                  ),
-                  Text(
-                    "服饰鞋包",
-                    style: TextStyle(color: Colors.black, fontSize: 11),
-                  )
-                ],
+            return GestureDetector(
+              child: Container(
+                child: Column(
+                  children: [
+                    Container(
+                      width: 45,
+                      height: 65,
+                    ),
+                    Text(
+                      index % 2 == 0 ? module.category[index ~/ 2].title : module.web[(index - 1) ~/ 2].title,
+                      style: TextStyle(color: Colors.black, fontSize: 11),
+                    )
+                  ],
+                ),
               ),
+              onTap: () {
+                if (index % 2 == 0) {
+                  jumpToCategoryView("1");
+                } else {
+                  jumpToWebView(module.web[(index - 1) ~/ 2].url);
+                }
+              },
             );
           },
         ),
       ),
     );
+  }
+
+  void jumpToWebView(String url) {
+    print("jump to webview url $url");
+  }
+
+  void jumpToCategoryView(String categoryId) {
+    print("jump to category view $categoryId");
   }
 }

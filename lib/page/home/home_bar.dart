@@ -1,8 +1,8 @@
-import 'dart:async';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_yanxuan/common/colors.dart';
+import 'package:flutter_yanxuan/page/home/model/home_model.dart';
+import 'package:provider/provider.dart';
 
 // progress -70~0为隐藏HomeAppBar 0-100为搜索栏上移 logo隐藏
 class HomeAppBar extends StatelessWidget {
@@ -59,7 +59,7 @@ class HomeAppBar extends StatelessWidget {
               bottom: 7,
               child: HomeSearchWidget(
                 width: _searchButtonWidth(context),
-                searchTextList: ["贝贝虾", "藤椒鸭三胗", "蒸汽热敷眼罩"],
+                searchTextList: context.watch<HomePageModel>().barModule.searchTextList,
               ),
             ),
           ],

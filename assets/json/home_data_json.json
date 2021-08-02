@@ -1,107 +1,105 @@
 {
-  "data": {
-    "barModule": {
-      "searchTextList": [
-        "贝贝虾",
-        "藤椒鸭三胗",
-        "蒸汽热敷眼罩"
-      ]
-    },
-    "categoryModule": {
-      "category": [
-        {
-          "picUrl": "https://yanxuan.nosdn.127.net/a74a7d55304888f984641f37bc8ddfd5.png?imageView&thumbnail=104y104&quality=100&type=webp",
-          "title": "美食酒水"
-        },
-        {
-          "picUrl": "https://yanxuan.nosdn.127.net/8447396925d167e972db5c437219e64b.png?imageView&thumbnail=104y104&quality=100&type=webp",
-          "title": "数码家电"
-        },
-        {
-          "picUrl": "https://yanxuan.nosdn.127.net/cb567aceec7e6c54fea6f6d8ed7dcff3.png?imageView&thumbnail=104y104&quality=100&type=webp",
-          "title": "服饰鞋包"
-        },
-        {
-          "picUrl": "https://yanxuan.nosdn.127.net/b0cd64b43ff3e1aa67c12f4d57d750e3.png?imageView&thumbnail=104y104&quality=100&type=webp",
-          "title": "个护清洁"
-        },
-        {
-          "picUrl": "https://yanxuan.nosdn.127.net/2496db5269056cb21007fba1c636d37f.png?imageView&thumbnail=104y104&quality=100&type=webp",
-          "title": "居家生活"
-        },
-        {
-          "picUrl": "https://yanxuan.nosdn.127.net/a74a7d55304888f984641f37bc8ddfd5.png?imageView&thumbnail=104y104&quality=100&type=webp",
-          "title": "美食酒水"
-        },
-        {
-          "picUrl": "https://yanxuan.nosdn.127.net/8447396925d167e972db5c437219e64b.png?imageView&thumbnail=104y104&quality=100&type=webp",
-          "title": "数码家电"
-        },
-        {
-          "picUrl": "https://yanxuan.nosdn.127.net/cb567aceec7e6c54fea6f6d8ed7dcff3.png?imageView&thumbnail=104y104&quality=100&type=webp",
-          "title": "服饰鞋包"
-        },
-        {
-          "picUrl": "https://yanxuan.nosdn.127.net/b0cd64b43ff3e1aa67c12f4d57d750e3.png?imageView&thumbnail=104y104&quality=100&type=webp",
-          "title": "个护清洁"
-        },
-        {
-          "picUrl": "https://yanxuan.nosdn.127.net/2496db5269056cb21007fba1c636d37f.png?imageView&thumbnail=104y104&quality=100&type=webp",
-          "title": "居家生活"
-        }
-      ],
-      "web": [
-        {
-          "picUrl": "https://yanxuan.nosdn.127.net/a74a7d55304888f984641f37bc8ddfd5.png?imageView&thumbnail=104y104&quality=100&type=webp",
-          "title": "美食酒水",
-          "url": "https://www.baidu.com"
-        },
-        {
-          "picUrl": "https://yanxuan.nosdn.127.net/8447396925d167e972db5c437219e64b.png?imageView&thumbnail=104y104&quality=100&type=webp",
-          "title": "数码家电",
-          "url": "https://www.baidu.com"
-        },
-        {
-          "picUrl": "https://yanxuan.nosdn.127.net/cb567aceec7e6c54fea6f6d8ed7dcff3.png?imageView&thumbnail=104y104&quality=100&type=webp",
-          "title": "服饰鞋包",
-          "url": "https://www.baidu.com"
-        },
-        {
-          "picUrl": "https://yanxuan.nosdn.127.net/b0cd64b43ff3e1aa67c12f4d57d750e3.png?imageView&thumbnail=104y104&quality=100&type=webp",
-          "title": "个护清洁",
-          "url": "https://www.baidu.com"
-        },
-        {
-          "picUrl": "https://yanxuan.nosdn.127.net/2496db5269056cb21007fba1c636d37f.png?imageView&thumbnail=104y104&quality=100&type=webp",
-          "title": "居家生活",
-          "url": "https://www.baidu.com"
-        },
-        {
-          "picUrl": "https://yanxuan.nosdn.127.net/a74a7d55304888f984641f37bc8ddfd5.png?imageView&thumbnail=104y104&quality=100&type=webp",
-          "title": "美食酒水",
-          "url": "https://www.baidu.com"
-        },
-        {
-          "picUrl": "https://yanxuan.nosdn.127.net/8447396925d167e972db5c437219e64b.png?imageView&thumbnail=104y104&quality=100&type=webp",
-          "title": "数码家电",
-          "url": "https://www.baidu.com"
-        },
-        {
-          "picUrl": "https://yanxuan.nosdn.127.net/cb567aceec7e6c54fea6f6d8ed7dcff3.png?imageView&thumbnail=104y104&quality=100&type=webp",
-          "title": "服饰鞋包",
-          "url": "https://www.baidu.com"
-        },
-        {
-          "picUrl": "https://yanxuan.nosdn.127.net/b0cd64b43ff3e1aa67c12f4d57d750e3.png?imageView&thumbnail=104y104&quality=100&type=webp",
-          "title": "个护清洁",
-          "url": "https://www.baidu.com"
-        },
-        {
-          "picUrl": "https://yanxuan.nosdn.127.net/2496db5269056cb21007fba1c636d37f.png?imageView&thumbnail=104y104&quality=100&type=webp",
-          "title": "居家生活",
-          "url": "https://www.baidu.com"
-        }
-      ]
-    }
+  "barModule": {
+    "searchTextList": [
+      "贝贝虾",
+      "藤椒鸭三胗",
+      "蒸汽热敷眼罩"
+    ]
+  },
+  "categoryModule": {
+    "category": [
+      {
+        "picUrl": "https://yanxuan.nosdn.127.net/a74a7d55304888f984641f37bc8ddfd5.png?imageView&thumbnail=104y104&quality=100&type=webp",
+        "title": "美食酒水"
+      },
+      {
+        "picUrl": "https://yanxuan.nosdn.127.net/8447396925d167e972db5c437219e64b.png?imageView&thumbnail=104y104&quality=100&type=webp",
+        "title": "数码家电"
+      },
+      {
+        "picUrl": "https://yanxuan.nosdn.127.net/cb567aceec7e6c54fea6f6d8ed7dcff3.png?imageView&thumbnail=104y104&quality=100&type=webp",
+        "title": "服饰鞋包"
+      },
+      {
+        "picUrl": "https://yanxuan.nosdn.127.net/b0cd64b43ff3e1aa67c12f4d57d750e3.png?imageView&thumbnail=104y104&quality=100&type=webp",
+        "title": "个护清洁"
+      },
+      {
+        "picUrl": "https://yanxuan.nosdn.127.net/2496db5269056cb21007fba1c636d37f.png?imageView&thumbnail=104y104&quality=100&type=webp",
+        "title": "居家生活"
+      },
+      {
+        "picUrl": "https://yanxuan.nosdn.127.net/a74a7d55304888f984641f37bc8ddfd5.png?imageView&thumbnail=104y104&quality=100&type=webp",
+        "title": "美食酒水"
+      },
+      {
+        "picUrl": "https://yanxuan.nosdn.127.net/8447396925d167e972db5c437219e64b.png?imageView&thumbnail=104y104&quality=100&type=webp",
+        "title": "数码家电"
+      },
+      {
+        "picUrl": "https://yanxuan.nosdn.127.net/cb567aceec7e6c54fea6f6d8ed7dcff3.png?imageView&thumbnail=104y104&quality=100&type=webp",
+        "title": "服饰鞋包"
+      },
+      {
+        "picUrl": "https://yanxuan.nosdn.127.net/b0cd64b43ff3e1aa67c12f4d57d750e3.png?imageView&thumbnail=104y104&quality=100&type=webp",
+        "title": "个护清洁"
+      },
+      {
+        "picUrl": "https://yanxuan.nosdn.127.net/2496db5269056cb21007fba1c636d37f.png?imageView&thumbnail=104y104&quality=100&type=webp",
+        "title": "居家生活"
+      }
+    ],
+    "web": [
+      {
+        "picUrl": "https://yanxuan.nosdn.127.net/a74a7d55304888f984641f37bc8ddfd5.png?imageView&thumbnail=104y104&quality=100&type=webp",
+        "title": "美食酒水",
+        "url": "https://www.baidu.com"
+      },
+      {
+        "picUrl": "https://yanxuan.nosdn.127.net/8447396925d167e972db5c437219e64b.png?imageView&thumbnail=104y104&quality=100&type=webp",
+        "title": "数码家电",
+        "url": "https://www.baidu.com"
+      },
+      {
+        "picUrl": "https://yanxuan.nosdn.127.net/cb567aceec7e6c54fea6f6d8ed7dcff3.png?imageView&thumbnail=104y104&quality=100&type=webp",
+        "title": "服饰鞋包",
+        "url": "https://www.baidu.com"
+      },
+      {
+        "picUrl": "https://yanxuan.nosdn.127.net/b0cd64b43ff3e1aa67c12f4d57d750e3.png?imageView&thumbnail=104y104&quality=100&type=webp",
+        "title": "个护清洁",
+        "url": "https://www.baidu.com"
+      },
+      {
+        "picUrl": "https://yanxuan.nosdn.127.net/2496db5269056cb21007fba1c636d37f.png?imageView&thumbnail=104y104&quality=100&type=webp",
+        "title": "居家生活",
+        "url": "https://www.baidu.com"
+      },
+      {
+        "picUrl": "https://yanxuan.nosdn.127.net/a74a7d55304888f984641f37bc8ddfd5.png?imageView&thumbnail=104y104&quality=100&type=webp",
+        "title": "美食酒水",
+        "url": "https://www.baidu.com"
+      },
+      {
+        "picUrl": "https://yanxuan.nosdn.127.net/8447396925d167e972db5c437219e64b.png?imageView&thumbnail=104y104&quality=100&type=webp",
+        "title": "数码家电",
+        "url": "https://www.baidu.com"
+      },
+      {
+        "picUrl": "https://yanxuan.nosdn.127.net/cb567aceec7e6c54fea6f6d8ed7dcff3.png?imageView&thumbnail=104y104&quality=100&type=webp",
+        "title": "服饰鞋包",
+        "url": "https://www.baidu.com"
+      },
+      {
+        "picUrl": "https://yanxuan.nosdn.127.net/b0cd64b43ff3e1aa67c12f4d57d750e3.png?imageView&thumbnail=104y104&quality=100&type=webp",
+        "title": "个护清洁",
+        "url": "https://www.baidu.com"
+      },
+      {
+        "picUrl": "https://yanxuan.nosdn.127.net/2496db5269056cb21007fba1c636d37f.png?imageView&thumbnail=104y104&quality=100&type=webp",
+        "title": "居家生活",
+        "url": "https://www.baidu.com"
+      }
+    ]
   }
 }
