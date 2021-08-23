@@ -1,0 +1,326 @@
+{
+    "swiper": [
+        {
+            "picUrl": "https://yanxuan.nosdn.127.net/44fedfc0e3f9314a8d462a5b3831d213.jpg?imageView&thumbnail=1242y2208&quality=100&type=webp",
+            "url": "http://www.baidu.com"
+        },
+        {
+            "picUrl": "https://yanxuan.nosdn.127.net/047eca73d307065d004521412c7541c5.jpeg?imageView&thumbnail=1242y2208&quality=100&type=webp",
+            "url": "http://www.baidu.com"
+        },
+        {
+            "picUrl": "https://yanxuan.nosdn.127.net/f4c098a29f2246f37636d490807228bb.jpg?imageView&thumbnail=1242y2208&quality=100&type=webp",
+            "url": "http://www.baidu.com"
+        },
+        {
+            "picUrl": "https://yanxuan.nosdn.127.net/ca4abf620d5a97fdd7a9041b50df572a.jpg?imageView&thumbnail=1242y2208&quality=100&type=webp",
+            "url": "http://www.baidu.com"
+        },
+        {
+            "picUrl": "https://yanxuan.nosdn.127.net/047eca73d307065d004521412c7541c5.jpeg?imageView&thumbnail=1242y2208&quality=100&type=webp",
+            "url": "http://www.baidu.com"
+        },
+        {
+            "picUrl": "https://yanxuan.nosdn.127.net/44fedfc0e3f9314a8d462a5b3831d213.jpg?imageView&thumbnail=1242y2208&quality=100&type=webp",
+            "url": "http://www.baidu.com"
+        },
+        {
+            "picUrl": "https://yanxuan.nosdn.127.net/0501f0d5d82075dbd0187733f80b8d03.jpg?imageView&thumbnail=1242y2208&quality=100&type=webp",
+            "url": "http://www.baidu.com"
+        },
+        {
+            "picUrl": "https://yanxuan.nosdn.127.net/047eca73d307065d004521412c7541c5.jpeg?imageView&thumbnail=1242y2208&quality=100&type=webp",
+            "url": "http://www.baidu.com"
+        }
+    ],
+    "countDown": {
+        "time": "10000",
+        "items": [
+            {
+                "picUrl": "https://yanxuan.nosdn.127.net/f4c098a29f2246f37636d490807228bb.jpg?imageView&thumbnail=1242y2208&quality=100&type=webp",
+                "originPrice": "29",
+                "discountPrice": "22.9"
+            },
+            {
+                "picUrl": "https://yanxuan.nosdn.127.net/f4c098a29f2246f37636d490807228bb.jpg?imageView&thumbnail=1242y2208&quality=100&type=webp",
+                "originPrice": "2009",
+                "discountPrice": "1999"
+            }
+        ]
+    },
+    "newProduct": [
+        "https://yanxuan.nosdn.127.net/f4c098a29f2246f37636d490807228bb.jpg?imageView&thumbnail=1242y2208&quality=100&type=webp",
+        "https://yanxuan.nosdn.127.net/f4c098a29f2246f37636d490807228bb.jpg?imageView&thumbnail=1242y2208&quality=100&type=webp"
+    ],
+    "titleItems": [
+        {
+            "items": [
+                {
+                    "title": "排行榜",
+                    "subtitle": "大家都在买",
+                    "subtitleColor": "#FFFFFF",
+                    "picUrl": "https://yanxuan.nosdn.127.net/f4c098a29f2246f37636d490807228bb.jpg?imageView&thumbnail=1242y2208&quality=100&type=webp"
+                },
+                {
+                    "title": "奥莱特卖",
+                    "subtitle": "全场两折起",
+                    "subtitleColor": "#FFFFFF",
+                    "picUrl": "https://yanxuan.nosdn.127.net/f4c098a29f2246f37636d490807228bb.jpg?imageView&thumbnail=1242y2208&quality=100&type=webp"
+                }
+            ]
+        },
+        {
+            "items": [
+                {
+                    "title": "二奢中古",
+                    "subtitle": "大牌超低价",
+                    "subtitleColor": "#FFFFFF",
+                    "picUrl": "https://yanxuan.nosdn.127.net/f4c098a29f2246f37636d490807228bb.jpg?imageView&thumbnail=1242y2208&quality=100&type=webp"
+                },
+                {
+                    "title": "严选直播",
+                    "subtitle": "福利大放送",
+                    "subtitleColor": "#FFFFFF",
+                    "picUrl": "https://yanxuan.nosdn.127.net/f4c098a29f2246f37636d490807228bb.jpg?imageView&thumbnail=1242y2208&quality=100&type=webp"
+                }
+            ]
+        }
+    ],
+    "webItems": [
+        {
+            "picUrl": "https://yanxuan.nosdn.127.net/f4c098a29f2246f37636d490807228bb.jpg?imageView&thumbnail=1242y2208&quality=100&type=webp",
+            "url": "http://www.baidu.com"
+        }
+    ],
+    "items": [
+        {
+            "isHot": "1",
+            "isLiving": "0",
+            "picUrl": "https://yanxuan.nosdn.127.net/f4c098a29f2246f37636d490807228bb.jpg?imageView&thumbnail=1242y2208&quality=100&type=webp",
+            "giftUrl": "https://yanxuan.nosdn.127.net/f4c098a29f2246f37636d490807228bb.jpg?imageView&thumbnail=1242y2208&quality=100&type=webp",
+            "describe": "1包/天,松软柔韧的口感堪比现烤",
+            "speciaDescribeTitle": "",
+            "speciaDescribe": "",
+            "speciaDescribeType": "0",
+            "leftDescribe": "",
+            "title": "边边都好吃的25%全买吐司952克（14包装）",
+            "subtitle": "饼干糕点热销榜第6名",
+            "tags": [
+                {
+                    "type": "1",
+                    "content": "Pro88折"
+                }
+            ],
+            "originPrice": "39",
+            "discountPrice": ""
+        },
+        {
+            "isHot": "1",
+            "isLiving": "0",
+            "picUrl": "https://yanxuan.nosdn.127.net/f4c098a29f2246f37636d490807228bb.jpg?imageView&thumbnail=1242y2208&quality=100&type=webp",
+            "giftUrl": "https://yanxuan.nosdn.127.net/f4c098a29f2246f37636d490807228bb.jpg?imageView&thumbnail=1242y2208&quality=100&type=webp",
+            "describe": "",
+            "speciaDescribeTitle": "特价",
+            "speciaDescribe": "仅剩19小时",
+            "speciaDescribeType": "1",
+            "leftDescribe": "",
+            "title": "无甜味剂，鲜切大桃，黄桃罐头425克*6罐",
+            "subtitle": "20万+评价",
+            "tags": [
+                {
+                    "type": "1",
+                    "content": "Pro88折"
+                },
+                {
+                    "type": "0",
+                    "content": "特价"
+                },
+                {
+                    "type": "0",
+                    "content": "换购"
+                }
+            ],
+            "originPrice": "49",
+            "discountPrice": "39.9"
+        },
+        {
+            "isHot": "0",
+            "isLiving": "1",
+            "picUrl": "https://yanxuan.nosdn.127.net/f4c098a29f2246f37636d490807228bb.jpg?imageView&thumbnail=1242y2208&quality=100&type=webp",
+            "giftUrl": "",
+            "describe": "",
+            "speciaDescribeTitle": "每日抄底",
+            "speciaDescribe": "仅剩26件 距结束19小时",
+            "speciaDescribeType": "1",
+            "leftDescribe": "",
+            "title": "1头牛仅产1千袋 牧场直达全脂高钙奶粉",
+            "subtitle": "全球美食特惠榜第1名",
+            "tags": [
+                {
+                    "type": "1",
+                    "content": "Pro88折"
+                },
+                {
+                    "type": "2",
+                    "content": "先用后付"
+                }
+            ],
+            "originPrice": "99",
+            "discountPrice": "75"
+        },
+        {
+            "isHot": "1",
+            "isLiving": "0",
+            "picUrl": "https://yanxuan.nosdn.127.net/f4c098a29f2246f37636d490807228bb.jpg?imageView&thumbnail=1242y2208&quality=100&type=webp",
+            "giftUrl": "",
+            "describe": "大块猪后腿原肉切片",
+            "speciaDescribeTitle": "",
+            "speciaDescribe": "",
+            "speciaDescribeType": "0",
+            "leftDescribe": "3个口味",
+            "title": "整片原切后腿肉，猪肉脯150克",
+            "subtitle": "肉类零食热销榜第6名",
+            "tags": [
+                {
+                    "type": "1",
+                    "content": "Pro88折"
+                },
+                {
+                    "type": "0",
+                    "content": "满99减20"
+                }
+            ],
+            "originPrice": "29",
+            "discountPrice": ""
+        },
+        {
+            "isHot": "1",
+            "isLiving": "0",
+            "picUrl": "https://yanxuan.nosdn.127.net/f4c098a29f2246f37636d490807228bb.jpg?imageView&thumbnail=1242y2208&quality=100&type=webp",
+            "giftUrl": "",
+            "describe": "",
+            "speciaDescribeTitle": "每日抄底",
+            "speciaDescribe": "8.18 10:00 开抢",
+            "speciaDescribeType": "2",
+            "leftDescribe": "",
+            "title": "缓解”低头族“颈椎酸痛，EMS颈椎按摩仪",
+            "subtitle": "按摩器热销榜第1名",
+            "tags": [
+                {
+                    "type": "1",
+                    "content": "Pro88折"
+                },
+                {
+                    "type": "2",
+                    "content": "先用后付"
+                },
+                {
+                    "type": "0",
+                    "content": "特价"
+                }
+            ],
+            "originPrice": "329",
+            "discountPrice": "189"
+        },
+        {
+            "isHot": "0",
+            "isLiving": "0",
+            "picUrl": "https://yanxuan.nosdn.127.net/f4c098a29f2246f37636d490807228bb.jpg?imageView&thumbnail=1242y2208&quality=100&type=webp",
+            "giftUrl": "",
+            "describe": "有肉有豆，低脂高纤双蛋白",
+            "speciaDescribe": "",
+            "speciaDescribeTitle": "",
+            "speciaDescribeType": "0",
+            "leftDescribe": "2个口味",
+            "title": "元气轻食”爱豆“加牛肉，牛与鹰嘴豆150克",
+            "subtitle": "2万+评价",
+            "tags": [
+                {
+                    "type": "1",
+                    "content": "Pro88折"
+                },
+                {
+                    "type": "0",
+                    "content": "满99减20"
+                }
+            ],
+            "originPrice": "22",
+            "discountPrice": ""
+        },
+        {
+            "isHot": "0",
+            "isLiving": "0",
+            "picUrl": "https://yanxuan.nosdn.127.net/f4c098a29f2246f37636d490807228bb.jpg?imageView&thumbnail=1242y2208&quality=100&type=webp",
+            "giftUrl": "",
+            "describe": "",
+            "speciaDescribe": "特价",
+            "speciaDescribeTitle": "正在抢购中",
+            "speciaDescribeType": "1",
+            "leftDescribe": "",
+            "title": "七夕送礼·吸痧走罐 热敷，经络疏通仪",
+            "subtitle": "疫情防控特惠榜第7名",
+            "tags": [
+                {
+                    "type": "2",
+                    "content": "先用后付"
+                },
+                {
+                    "type": "0",
+                    "content": "特价"
+                }
+            ],
+            "originPrice": "299",
+            "discountPrice": "199"
+        },
+        {
+            "isHot": "1",
+            "isLiving": "0",
+            "picUrl": "https://yanxuan.nosdn.127.net/f4c098a29f2246f37636d490807228bb.jpg?imageView&thumbnail=1242y2208&quality=100&type=webp",
+            "giftUrl": "",
+            "describe": "",
+            "speciaDescribe": "特价",
+            "speciaDescribeTitle": "8.20 00:00 开抢",
+            "speciaDescribeType": "2",
+            "leftDescribe": "韩国制造",
+            "title": "牙渍橡皮擦 韩国between净白牙膏100g",
+            "subtitle": "严选全球口腔护理热销榜第1名",
+            "tags": [
+                {
+                    "type": "1",
+                    "content": "Pro88折"
+                },
+                {
+                    "type": "2",
+                    "content": "先用后付"
+                }
+            ],
+            "originPrice": "29.9",
+            "discountPrice": ""
+        },
+        {
+            "isHot": "0",
+            "isLiving": "0",
+            "picUrl": "https://yanxuan.nosdn.127.net/f4c098a29f2246f37636d490807228bb.jpg?imageView&thumbnail=1242y2208&quality=100&type=webp",
+            "giftUrl": "",
+            "describe": "低脂配方，三分甜刚刚好",
+            "speciaDescribe": "",
+            "speciaDescribeTitle": "",
+            "speciaDescribeType": "0",
+            "leftDescribe": "",
+            "title": "清新三分甜，低脂抹茶哈铁 20克*10条",
+            "subtitle": "6万+评价",
+            "tags": [
+                {
+                    "type": "1",
+                    "content": "Pro88折"
+                },
+                {
+                    "type": "0",
+                    "content": "满99减20"
+                }
+            ],
+            "originPrice": "28",
+            "discountPrice": ""
+        }
+    ]
+}

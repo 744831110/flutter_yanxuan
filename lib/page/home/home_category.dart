@@ -86,7 +86,8 @@ class _HomeCategoryWidgetState extends State<HomeCategoryWidget> {
               child: Container(
                 child: Column(
                   children: [
-                    Container(
+                    Image.network(
+                      index % 2 == 0 ? module.category[index ~/ 2].picUrl : module.web[(index - 1) ~/ 2].picUrl,
                       width: 45,
                       height: 65,
                     ),

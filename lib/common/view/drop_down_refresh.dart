@@ -257,7 +257,6 @@ class CustomCupertinoSliverRefreshControl extends StatefulWidget {
     double progress = (pulledExtent - 100 - 20) * 100 / refreshTriggerPullDistance;
     return Center(
       child: Container(
-        color: Colors.red,
         child: Stack(
           clipBehavior: Clip.none,
           alignment: Alignment.bottomCenter,

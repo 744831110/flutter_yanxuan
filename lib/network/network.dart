@@ -54,7 +54,6 @@ class LocalDataInterceptor extends Interceptor {
       //读取本地json返回
       String path = options.path.replaceAll("/", "_");
       path = "assets/json/$path.json";
-      print(path);
       try {
         final jsonString = await rootBundle.loadString(path);
         final response = Response(requestOptions: options, data: json.decode(jsonString));

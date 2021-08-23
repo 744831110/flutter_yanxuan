@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_yanxuan/common/colors.dart';
+import 'package:flutter_yanxuan/page/category/category_page.dart';
 import 'package:flutter_yanxuan/page/home/home_page.dart';
 import 'package:provider/provider.dart';
 
@@ -15,6 +15,7 @@ class MainPage extends StatefulWidget {
 class _MainPageState extends State<MainPage> {
   final pageController = PageController();
   final homePage = HomePage();
+  final categoryPage = CategoryWidget();
 
   List<Widget>? itemList;
   final List<_BarItemModel> modelList = [];
@@ -46,7 +47,7 @@ class _MainPageState extends State<MainPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: PageView(
-        children: [homePage],
+        children: [homePage, categoryPage],
         controller: pageController,
         onPageChanged: (index) {
           setState(() {
@@ -64,7 +65,7 @@ class _MainPageState extends State<MainPage> {
               mainAxisSize: MainAxisSize.max,
               children: modelList.map((model) {
                 if (model.index == 0) {
-                  return normalItem(model, specialWidget: model.isSelect ? homeSpecialWidget(isShowRecommend: tabbarModel.isShowHomeRecommand) : null);
+                  return normalItem(model, specialWidget: model.isSelect ? homeSpecialWidget(isShowRecommend: !tabbarModel.isShowHomeRecommand) : null);
                 }
                 return normalItem(model);
               }).toList(),

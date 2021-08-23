@@ -101,5 +101,27 @@
         "url": "https://www.baidu.com"
       }
     ]
-  }
+  },
+  "recommendModule": [
+    {
+      "name": "精选",
+      "type": 0
+    },
+    {
+      "name": "奥运狂欢",
+      "type": 1
+    },
+    {
+      "name": "纳凉好物",
+      "type": 2
+    },
+    {
+      "name": "应季美食",
+      "type": 3
+    },
+    {
+      "name": "日用个护",
+      "type": 4
+    }
+  ]
 }
