@@ -58,13 +58,13 @@
                 {
                     "title": "排行榜",
                     "subtitle": "大家都在买",
-                    "subtitleColor": "#FFFFFF",
+                    "subtitleColor": "0xFFE02020",
                     "picUrl": "https://yanxuan.nosdn.127.net/f4c098a29f2246f37636d490807228bb.jpg?imageView&thumbnail=1242y2208&quality=100&type=webp"
                 },
                 {
                     "title": "奥莱特卖",
                     "subtitle": "全场两折起",
-                    "subtitleColor": "#FFFFFF",
+                    "subtitleColor": "0xFFE02020",
                     "picUrl": "https://yanxuan.nosdn.127.net/f4c098a29f2246f37636d490807228bb.jpg?imageView&thumbnail=1242y2208&quality=100&type=webp"
                 }
             ]
@@ -74,13 +74,13 @@
                 {
                     "title": "二奢中古",
                     "subtitle": "大牌超低价",
-                    "subtitleColor": "#FFFFFF",
+                    "subtitleColor": "0xFFE02020",
                     "picUrl": "https://yanxuan.nosdn.127.net/f4c098a29f2246f37636d490807228bb.jpg?imageView&thumbnail=1242y2208&quality=100&type=webp"
                 },
                 {
                     "title": "严选直播",
                     "subtitle": "福利大放送",
-                    "subtitleColor": "#FFFFFF",
+                    "subtitleColor": "0xFFE02020",
                     "picUrl": "https://yanxuan.nosdn.127.net/f4c098a29f2246f37636d490807228bb.jpg?imageView&thumbnail=1242y2208&quality=100&type=webp"
                 }
             ]

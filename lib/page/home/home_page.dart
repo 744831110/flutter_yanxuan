@@ -129,7 +129,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                 SliverToBoxAdapter(
                   child: Container(
                     height: 500,
-                    padding: EdgeInsets.only(left: 10, right: 10),
                     child: PageView(
                       onPageChanged: (index) {
                         setState(() {

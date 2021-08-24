@@ -91,13 +91,13 @@ class HomeTabCountDownModel {
 
 class HomeTabCountDownItemModel {
   final String picUrl;
-  final double originPrice;
-  final double discountPrice;
+  final String originPrice;
+  final String discountPrice;
   HomeTabCountDownItemModel(this.picUrl, this.originPrice, this.discountPrice);
   HomeTabCountDownItemModel.fromJson(Map<String, dynamic> json)
       : picUrl = json["picUrl"],
-        originPrice = double.parse(json["originPrice"].toString()),
-        discountPrice = double.parse(json["originPrice"].toString());
+        originPrice = json["originPrice"],
+        discountPrice = json["discountPrice"];
 }
 
 class HomeTabTitleItemModel {
