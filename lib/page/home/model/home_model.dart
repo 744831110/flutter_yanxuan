@@ -141,8 +141,8 @@ class HomeTabItemModel {
   final String title;
   final String subtitle;
   final List<HomeTabTagModel> tags;
-  final double originPrice;
-  final double? discountPrice;
+  final String originPrice;
+  final String? discountPrice;
   HomeTabItemModel(this.isHot, this.isLiving, this.picUrl, this.giftUrl, this.describe, this.speciaDescribe, this.speciaDescribeTitle, this.speciaDescribeType, this.leftDescribe, this.title, this.subtitle, this.tags,
       this.originPrice, this.discountPrice);
   HomeTabItemModel.fromJson(Map<String, dynamic> json)
@@ -158,8 +158,8 @@ class HomeTabItemModel {
         title = json["title"],
         subtitle = json["subtitle"],
         tags = (json["tags"] as List).map((e) => HomeTabTagModel.fromJson(e)).toList(),
-        originPrice = double.parse(json["originPrice"]),
-        discountPrice = json["discountPrice"].toString().isEmpty ? null : double.parse(json["discountPrice"]) {
+        originPrice = double.parse(json["originPrice"]).toString(),
+        discountPrice = json["discountPrice"].toString().isEmpty ? null : double.parse(json["discountPrice"]).toString() {
     print("title $title");
   }
 }

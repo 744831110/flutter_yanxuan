@@ -64,7 +64,7 @@
                 {
                     "title": "奥莱特卖",
                     "subtitle": "全场两折",
-                    "subtitleColor": "0xFFE02020",
+                    "subtitleColor": "0xFF6718C0",
                     "picUrl": "https://yanxuan.nosdn.127.net/f4c098a29f2246f37636d490807228bb.jpg?imageView&thumbnail=1242y2208&quality=100&type=webp"
                 }
             ]
@@ -74,13 +74,13 @@
                 {
                     "title": "二奢中古",
                     "subtitle": "大牌超低价",
-                    "subtitleColor": "0xFFE02020",
+                    "subtitleColor": "0xFFEC7B24",
                     "picUrl": "https://yanxuan.nosdn.127.net/f4c098a29f2246f37636d490807228bb.jpg?imageView&thumbnail=1242y2208&quality=100&type=webp"
                 },
                 {
                     "title": "严选直播",
                     "subtitle": "福利大放送",
-                    "subtitleColor": "0xFFE02020",
+                    "subtitleColor": "0xFFEC7B24",
                     "picUrl": "https://yanxuan.nosdn.127.net/f4c098a29f2246f37636d490807228bb.jpg?imageView&thumbnail=1242y2208&quality=100&type=webp"
                 }
             ]
@@ -108,7 +108,7 @@
             "tags": [
                 {
                     "type": "1",
-                    "content": "Pro88折"
+                    "content": "88折"
                 }
             ],
             "originPrice": "39",
@@ -129,7 +129,7 @@
             "tags": [
                 {
                     "type": "1",
-                    "content": "Pro88折"
+                    "content": "88折"
                 },
                 {
                     "type": "0",
@@ -158,7 +158,7 @@
             "tags": [
                 {
                     "type": "1",
-                    "content": "Pro88折"
+                    "content": "88折"
                 },
                 {
                     "type": "2",
@@ -183,7 +183,7 @@
             "tags": [
                 {
                     "type": "1",
-                    "content": "Pro88折"
+                    "content": "88折"
                 },
                 {
                     "type": "0",
@@ -208,7 +208,7 @@
             "tags": [
                 {
                     "type": "1",
-                    "content": "Pro88折"
+                    "content": "88折"
                 },
                 {
                     "type": "2",
@@ -237,7 +237,7 @@
             "tags": [
                 {
                     "type": "1",
-                    "content": "Pro88折"
+                    "content": "88折"
                 },
                 {
                     "type": "0",
@@ -253,8 +253,8 @@
             "picUrl": "https://yanxuan.nosdn.127.net/f4c098a29f2246f37636d490807228bb.jpg?imageView&thumbnail=1242y2208&quality=100&type=webp",
             "giftUrl": "",
             "describe": "",
-            "speciaDescribe": "特价",
-            "speciaDescribeTitle": "正在抢购中",
+            "speciaDescribe": "正在抢购中",
+            "speciaDescribeTitle": "特价",
             "speciaDescribeType": "1",
             "leftDescribe": "",
             "title": "七夕送礼·吸痧走罐 热敷，经络疏通仪",
@@ -278,8 +278,8 @@
             "picUrl": "https://yanxuan.nosdn.127.net/f4c098a29f2246f37636d490807228bb.jpg?imageView&thumbnail=1242y2208&quality=100&type=webp",
             "giftUrl": "",
             "describe": "",
-            "speciaDescribe": "特价",
-            "speciaDescribeTitle": "8.20 00:00 开抢",
+            "speciaDescribe": "8.20 00:00 开抢",
+            "speciaDescribeTitle": "特价",
             "speciaDescribeType": "2",
             "leftDescribe": "韩国制造",
             "title": "牙渍橡皮擦 韩国between净白牙膏100g",
@@ -287,7 +287,7 @@
             "tags": [
                 {
                     "type": "1",
-                    "content": "Pro88折"
+                    "content": "88折"
                 },
                 {
                     "type": "2",
@@ -295,7 +295,7 @@
                 }
             ],
             "originPrice": "29.9",
-            "discountPrice": ""
+            "discountPrice": "25.9"
         },
         {
             "isHot": "0",
@@ -312,7 +312,7 @@
             "tags": [
                 {
                     "type": "1",
-                    "content": "Pro88折"
+                    "content": "88折"
                 },
                 {
                     "type": "0",
