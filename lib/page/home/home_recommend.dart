@@ -196,11 +196,12 @@ class _HomeTabCountDownTextState extends State<HomeTabCountDownText> {
   int hours = 0;
   int min = 0;
   int seconds = 0;
+  late Timer timer;
   @override
   void initState() {
     super.initState();
     this.countDown = widget.countDown;
-    Timer.periodic(Duration(seconds: 1), (timer) {
+    timer = Timer.periodic(Duration(seconds: 1), (timer) {
       setState(() {
         countDown--;
         hours = countDown ~/ 3600;
@@ -233,11 +234,17 @@ class _HomeTabCountDownTextState extends State<HomeTabCountDownText> {
       decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(10)), color: Colors.black),
       child: Center(
         child: Text(
-          "$time",
+          time ~/ 10 == 0 ? "0$time" : "$time",
           style: TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.w300),
         ),
       ),
     );
+  }
+
+  @override
+  void deactivate() {
+    timer.cancel();
+    super.deactivate();
   }
 }
 
