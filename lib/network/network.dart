@@ -20,7 +20,7 @@ class NetWorkHelper {
   static const String localHost = "localhost";
 
   late Dio _dio;
-  Dio get getDio => _dio;
+  Dio get dio => _dio;
 
   NetWorkHelper._() {
     BaseOptions _releaseBaseOption = new BaseOptions(

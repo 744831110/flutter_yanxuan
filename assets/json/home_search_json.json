@@ -1,0 +1,104 @@
+{
+    "hotSearch": [
+        {
+            "searchText": "林音实木家具",
+            "isHot": "0"
+        },
+        {
+            "searchText": "茶包",
+            "isHot": "1"
+        },
+        {
+            "searchText": "返校季",
+            "isHot": "1"
+        },
+        {
+            "searchText": "刮痧",
+            "isHot": "0"
+        },
+        {
+            "searchText": "电锅",
+            "isHot": "0"
+        },
+        {
+            "searchText": "黄桃罐头",
+            "isHot": "0"
+        },
+        {
+            "searchText": "艾灸",
+            "isHot": "0"
+        },
+        {
+            "searchText": "漱口水",
+            "isHot": "0"
+        },
+        {
+            "searchText": "早餐机",
+            "isHot": "0"
+        },
+        {
+            "searchText": "果冻",
+            "isHot": "0"
+        },
+        {
+            "searchText": "花茶",
+            "isHot": "0"
+        },
+        {
+            "searchText": "牙膏",
+            "isHot": "0"
+        }
+    ],
+    "secondCategory": [
+        {
+            "picUrl": "https://yanxuan.nosdn.127.net/8447396925d167e972db5c437219e64b.png?imageView&thumbnail=104y104&quality=100&type=webp",
+            "title": "传统茗茶",
+            "type": "1"
+        },
+        {
+            "picUrl": "https://yanxuan.nosdn.127.net/8447396925d167e972db5c437219e64b.png?imageView&thumbnail=104y104&quality=100&type=webp",
+            "title": "茶包花茶",
+            "type": "2"
+        },
+        {
+            "picUrl": "https://yanxuan.nosdn.127.net/8447396925d167e972db5c437219e64b.png?imageView&thumbnail=104y104&quality=100&type=webp",
+            "title": "冲饮茗茶",
+            "type": "3"
+        },
+        {
+            "picUrl": "https://yanxuan.nosdn.127.net/8447396925d167e972db5c437219e64b.png?imageView&thumbnail=104y104&quality=100&type=webp",
+            "title": "茗茶系列",
+            "type": "4"
+        },
+        {
+            "picUrl": "https://yanxuan.nosdn.127.net/8447396925d167e972db5c437219e64b.png?imageView&thumbnail=104y104&quality=100&type=webp",
+            "title": "爆款榜单",
+            "type": "5"
+        },
+        {
+            "picUrl": "https://yanxuan.nosdn.127.net/8447396925d167e972db5c437219e64b.png?imageView&thumbnail=104y104&quality=100&type=webp",
+            "title": "衣物护理",
+            "type": "6"
+        },
+        {
+            "picUrl": "https://yanxuan.nosdn.127.net/8447396925d167e972db5c437219e64b.png?imageView&thumbnail=104y104&quality=100&type=webp",
+            "title": "口腔护理",
+            "type": "7"
+        },
+        {
+            "picUrl": "https://yanxuan.nosdn.127.net/8447396925d167e972db5c437219e64b.png?imageView&thumbnail=104y104&quality=100&type=webp",
+            "title": "中医保健",
+            "type": "8"
+        },
+        {
+            "picUrl": "https://yanxuan.nosdn.127.net/8447396925d167e972db5c437219e64b.png?imageView&thumbnail=104y104&quality=100&type=webp",
+            "title": "原创单品",
+            "type": "9"
+        },
+        {
+            "picUrl": "https://yanxuan.nosdn.127.net/8447396925d167e972db5c437219e64b.png?imageView&thumbnail=104y104&quality=100&type=webp",
+            "title": "国风",
+            "type": "10"
+        }
+    ]
+}

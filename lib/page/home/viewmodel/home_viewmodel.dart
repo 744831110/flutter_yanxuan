@@ -19,16 +19,16 @@ class HomeViewModel {
   List<Stream<HomeTabModel>> get homeTabStreams => _tabStreamControllers.map((e) => e.stream).toList();
 
   void requestHomeData() {
-    NetWorkHelper.instance.getDio.get("home/data/json").then((value) {
+    NetWorkHelper.instance.dio.get("home/data/json").then((value) {
       _homePageModel = HomePageModel.fromJson(value.data);
       if (_homePageModel != null) {
-        _controller.add(_homePageModel!);
         int length = _homePageModel!.recommendTabModelList.length;
         for (int i = 0; i < length; i++) {
           _tabStreamControllers.add(BehaviorSubject<HomeTabModel>());
           _pageList.add(0);
           _tabModels.add(null);
         }
+        _controller.add(_homePageModel!);
         this.requestAllTabData(_homePageModel!.recommendTabModelList.map((e) => e.type).toList());
       }
     }).catchError((error) {
@@ -39,7 +39,7 @@ class HomeViewModel {
   void requestAllTabData(List<int> tabType) {
     for (int i = 0; i < tabType.length; i++) {
       int type = tabType[i];
-      NetWorkHelper.instance.getDio.get("home/tab/json", queryParameters: {"type": type}).then((value) {
+      NetWorkHelper.instance.dio.get("home/tab/json", queryParameters: {"type": type}).then((value) {
         print(value);
         final model = HomeTabModel.fromJson(value.data);
         _tabStreamControllers[i].add(model);

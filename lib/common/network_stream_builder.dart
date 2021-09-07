@@ -17,11 +17,14 @@ class NetworkStreamBuilder<T> extends StatelessWidget {
       stream: this.stream,
       builder: (context, snapshot) {
         if (snapshot.hasError) {
+          print("this is error view");
           return errorView ?? Container();
         } else {
           if (!snapshot.hasData) {
+            print("this is empty view");
             return emptyView ?? Container();
           } else {
+            print("provider snapdata is ${snapshot.data}");
             return Provider<T>.value(
               value: snapshot.data!,
               child: builder(context, snapshot.data!),

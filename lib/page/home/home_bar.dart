@@ -4,13 +4,15 @@ import 'package:flutter_yanxuan/common/colors.dart';
 import 'package:flutter_yanxuan/page/home/model/home_model.dart';
 import 'package:provider/provider.dart';
 
+typedef SearchCallback = void Function(String searchText);
+
 // progress -70~0为隐藏HomeAppBar 0-100为搜索栏上移 logo隐藏
 class HomeAppBar extends StatelessWidget {
   final double progress;
   final VoidCallback? signInButtonAction;
   final VoidCallback? sweepButtonAction;
   final VoidCallback? messageButtonAction;
-  final VoidCallback? searchAction;
+  final SearchCallback? searchAction;
   HomeAppBar({
     Key? key,
     required this.progress,
@@ -60,6 +62,7 @@ class HomeAppBar extends StatelessWidget {
               child: HomeSearchWidget(
                 width: _searchButtonWidth(context),
                 searchTextList: context.watch<HomePageModel>().barModule.searchTextList,
+                searchAction: searchAction,
               ),
             ),
           ],
@@ -180,7 +183,7 @@ class HomeAppBar extends StatelessWidget {
 }
 
 class HomeSearchWidget extends StatefulWidget {
-  final VoidCallback? searchAction;
+  final SearchCallback? searchAction;
   final List<String>? searchTextList;
   final double width;
   HomeSearchWidget({Key? key, this.searchAction, this.searchTextList, required this.width}) : super(key: key);
@@ -237,59 +240,67 @@ class _HomeSearchWidgetState extends State<HomeSearchWidget> with TickerProvider
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 36,
-      width: widget.width,
-      child: ClipRect(
-        child: Padding(
-          padding: EdgeInsets.only(left: 10.0, right: 10.0),
-          child: Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(18)),
-              border: Border.all(color: Colors.red, width: 2),
-              color: Colors.white,
-            ),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Padding(
-                  padding: EdgeInsets.only(
-                    left: 10,
+    return GestureDetector(
+      child: Container(
+        height: 36,
+        width: widget.width,
+        child: ClipRect(
+          child: Padding(
+            padding: EdgeInsets.only(left: 10.0, right: 10.0),
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(18)),
+                border: Border.all(color: Colors.red, width: 2),
+                color: Colors.white,
+              ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(
+                      left: 10,
+                    ),
+                    child: Image(
+                      image: AssetImage("assets/images/nav_search_ic_normal.png"),
+                      width: 15,
+                      height: 15,
+                    ),
                   ),
-                  child: Icon(
-                    Icons.search,
-                    size: 20,
-                  ),
-                ),
-                Expanded(
-                  child: Padding(
-                    padding: EdgeInsets.only(left: 5),
-                    child: Transform.translate(
-                      offset: Offset(0, isSwitchAnimation ? _firstUpAnimation.value : _secondUpAnimation.value),
-                      child: Text(
-                        searchText,
-                        style: TextStyle(color: greyTextColor, fontSize: 15),
+                  Expanded(
+                    child: Padding(
+                      padding: EdgeInsets.only(left: 5),
+                      child: Transform.translate(
+                        offset: Offset(0, isSwitchAnimation ? _firstUpAnimation.value : _secondUpAnimation.value),
+                        child: Text(
+                          searchText,
+                          style: TextStyle(color: greyTextColor, fontSize: 15),
+                        ),
                       ),
                     ),
                   ),
-                ),
-                Container(
-                  width: 60,
-                  height: 32,
-                  decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(16)), color: Colors.red),
-                  child: Center(
-                    child: Text(
-                      "搜索",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500, fontSize: 17),
+                  Container(
+                    width: 60,
+                    height: 32,
+                    decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(16)), color: Colors.red),
+                    child: Center(
+                      child: Text(
+                        "搜索",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500, fontSize: 17),
+                      ),
                     ),
-                  ),
-                )
-              ],
+                  )
+                ],
+              ),
             ),
           ),
         ),
       ),
+      onTap: () {
+        if (widget.searchAction != null) {
+          widget.searchAction!(showText);
+        }
+      },
     );
   }
 

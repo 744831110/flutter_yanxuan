@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_yanxuan/common/colors.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
@@ -581,7 +580,7 @@ class HomeTabItemSpeciaDescribeWidget extends StatelessWidget {
               children: [
                 Container(
                   decoration: BoxDecoration(
-                    image: DecorationImage(image: AssetImage(getDecorationImageFromType(describeType)), centerSlice: Rect.fromLTWH(10, 0, 5, 5)),
+                    image: DecorationImage(image: AssetImage(getDecorationImageFromType(describeType)), centerSlice: Rect.fromLTWH(10, 0, 3, 5)),
                   ),
                   child: Padding(
                     padding: EdgeInsets.only(right: 10, left: 5),
@@ -589,13 +588,13 @@ class HomeTabItemSpeciaDescribeWidget extends StatelessWidget {
                       children: [
                         Text(
                           describeTitle,
-                          style: TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w500),
+                          style: TextStyle(color: getTextColorFromType(describeType), fontSize: 12, fontWeight: FontWeight.w500),
                         ),
                         discountPrice == null
                             ? Container()
                             : Text(
                                 discountPrice!,
-                                style: TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w600),
+                                style: TextStyle(color: getTextColorFromType(describeType), fontSize: 12, fontWeight: FontWeight.w600),
                               )
                       ],
                     ),
@@ -605,7 +604,7 @@ class HomeTabItemSpeciaDescribeWidget extends StatelessWidget {
                   padding: EdgeInsets.only(left: 5, top: 5),
                   child: Text(
                     describe,
-                    style: TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.w400),
+                    style: TextStyle(color: getTextColorFromType(describeType), fontSize: 11, fontWeight: FontWeight.w400),
                   ),
                 )
               ],
@@ -614,6 +613,15 @@ class HomeTabItemSpeciaDescribeWidget extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  Color getTextColorFromType(int type) {
+    if (type == 2) {
+      return Colors.black;
+    } else if (type == 1) {
+      return Colors.white;
+    }
+    return Colors.white;
   }
 
   String getDecorationImageFromType(int type) {
