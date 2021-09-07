@@ -1,3 +1,5 @@
+import 'package:flutter_yanxuan/page/good/good_model.dart';
+
 class HomePageModel {
   final HomeBarModule barModule;
   final HomeCategoryModule categoryModule;
@@ -60,7 +62,7 @@ class HomeTabModel {
   final List<String> newProduct;
   final List<HomeTabTitleItemModel> titleItems;
   final List<HomeTabWebItemModel> webItems;
-  List<HomeTabItemModel> items;
+  List<GoodItemModel> items;
   HomeTabModel(this.swiper, this.countDown, this.newProduct, this.titleItems, this.webItems, this.items);
   HomeTabModel.fromJson(Map<String, dynamic> json)
       : swiper = (json["swiper"] as List).map((e) => HomeTabSwiperModel.fromJson(e)).toList(),
@@ -68,7 +70,7 @@ class HomeTabModel {
         newProduct = json["newProduct"].cast<String>(),
         titleItems = (json["titleItems"] as List).map((e) => HomeTabTitleItemModel.fromJson(e)).toList(),
         webItems = (json["webItems"] as List).map((e) => HomeTabWebItemModel.fromJson(e)).toList(),
-        items = (json["items"] as List).map((e) => HomeTabItemModel.fromJson(e)).toList();
+        items = (json["items"] as List).map((e) => GoodItemModel.fromJson(e)).toList();
 }
 
 class HomeTabSwiperModel {
@@ -126,49 +128,4 @@ class HomeTabWebItemModel {
   HomeTabWebItemModel.fromJson(Map<String, dynamic> json)
       : picUrl = json["picUrl"],
         url = json["url"];
-}
-
-class HomeTabItemModel {
-  final bool isHot;
-  final bool isLiving;
-  final String picUrl;
-  final String giftUrl;
-  final String describe;
-  final String speciaDescribeTitle;
-  final String speciaDescribe;
-  final int speciaDescribeType;
-  final String leftDescribe;
-  final String title;
-  final String subtitle;
-  final List<HomeTabTagModel> tags;
-  final String originPrice;
-  final String? discountPrice;
-  HomeTabItemModel(this.isHot, this.isLiving, this.picUrl, this.giftUrl, this.describe, this.speciaDescribe, this.speciaDescribeTitle, this.speciaDescribeType, this.leftDescribe, this.title, this.subtitle, this.tags,
-      this.originPrice, this.discountPrice);
-  HomeTabItemModel.fromJson(Map<String, dynamic> json)
-      : isHot = int.parse(json["isHot"]) == 1,
-        isLiving = int.parse(json["isLiving"]) == 1,
-        picUrl = json["picUrl"],
-        giftUrl = json["giftUrl"],
-        describe = json["describe"],
-        speciaDescribeTitle = json["speciaDescribeTitle"],
-        speciaDescribe = json["speciaDescribe"],
-        speciaDescribeType = int.parse(json["speciaDescribeType"]),
-        leftDescribe = json["leftDescribe"],
-        title = json["title"],
-        subtitle = json["subtitle"],
-        tags = (json["tags"] as List).map((e) => HomeTabTagModel.fromJson(e)).toList(),
-        originPrice = double.parse(json["originPrice"]).toString(),
-        discountPrice = json["discountPrice"].toString().isEmpty ? null : double.parse(json["discountPrice"]).toString() {
-    print("title $title");
-  }
-}
-
-class HomeTabTagModel {
-  final int type;
-  final String content;
-  HomeTabTagModel(this.type, this.content);
-  HomeTabTagModel.fromJson(Map<String, dynamic> json)
-      : type = int.parse(json["type"]),
-        content = json["content"];
 }

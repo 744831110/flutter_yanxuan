@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_yanxuan/common/colors.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:flutter_yanxuan/page/good/good_model.dart';
 import 'package:flutter_yanxuan/page/home/model/home_model.dart';
 import 'package:provider/provider.dart';
 
@@ -399,7 +400,7 @@ class HomeTabTitleItem extends StatelessWidget {
 }
 
 class HomeTabItemWidget extends StatefulWidget {
-  final HomeTabItemModel model;
+  final GoodItemModel model;
   HomeTabItemWidget({required this.model});
   @override
   State<StatefulWidget> createState() {
@@ -468,7 +469,7 @@ class _HomeTabItemWidgetState extends State<HomeTabItemWidget> {
 }
 
 class HomeTabItemImageWidget extends StatelessWidget {
-  final HomeTabItemModel model;
+  final GoodItemModel model;
   HomeTabItemImageWidget({required this.model});
   @override
   Widget build(BuildContext context) {

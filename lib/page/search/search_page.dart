@@ -1,23 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_yanxuan/common/colors.dart';
 import 'package:flutter_yanxuan/common/network_stream_builder.dart';
-import 'package:flutter_yanxuan/page/search/model/home_search_model.dart';
-import 'package:flutter_yanxuan/page/search/viewmodel/home_search_viewmodel.dart';
+import 'package:flutter_yanxuan/page/search/model/search_model.dart';
+import 'package:flutter_yanxuan/page/search/viewmodel/search_viewmodel.dart';
 
 typedef SearchTextCallback = void Function(String searchText);
 
-class HomeSearchPage extends StatefulWidget {
+class SearchPage extends StatefulWidget {
   final String hintText;
-  HomeSearchPage({required this.hintText});
+  SearchPage({required this.hintText});
   @override
   State<StatefulWidget> createState() {
-    return _HomeSearchPageState();
+    return _SearchPageState();
   }
 }
 
-class _HomeSearchPageState extends State<HomeSearchPage> {
+class _SearchPageState extends State<SearchPage> {
   List<String> searchRecordList = [];
-  final viewModel = HomeSearchViewModel();
+  final viewModel = SearchViewModel();
   @override
   void initState() {
     super.initState();
@@ -39,7 +39,7 @@ class _HomeSearchPageState extends State<HomeSearchPage> {
             Expanded(
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: 15),
-                child: NetworkStreamBuilder<HomeSearchModel>(
+                child: NetworkStreamBuilder<SearchModel>(
                   stream: viewModel.homeSearchDataStream,
                   errorView: searchContent(),
                   emptyView: searchContent(),
@@ -55,7 +55,7 @@ class _HomeSearchPageState extends State<HomeSearchPage> {
     );
   }
 
-  Widget searchContent({HomeSearchModel? model}) {
+  Widget searchContent({SearchModel? model}) {
     List<Widget> slivers = [];
     if (searchRecordList.length > 0) {
       slivers.add(
@@ -83,7 +83,7 @@ class _HomeSearchPageState extends State<HomeSearchPage> {
     );
   }
 
-  Widget _hotSearchWidget(HomeSearchModel model) {
+  Widget _hotSearchWidget(SearchModel model) {
     return SliverToBoxAdapter(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -127,7 +127,7 @@ class _HomeSearchPageState extends State<HomeSearchPage> {
     );
   }
 
-  SliverGrid _hotCategoryWidget(HomeSearchModel model) {
+  SliverGrid _hotCategoryWidget(SearchModel model) {
     return SliverGrid(
       delegate: SliverChildBuilderDelegate(
         (context, index) {

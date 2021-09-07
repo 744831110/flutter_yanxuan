@@ -13,7 +13,7 @@ import 'package:flutter_yanxuan/page/home/home_recommend.dart';
 import 'package:flutter_yanxuan/page/home/model/home_model.dart';
 import 'package:flutter_yanxuan/page/home/viewmodel/home_viewmodel.dart';
 import 'package:flutter_yanxuan/page/main/main_page.dart';
-import 'package:flutter_yanxuan/page/search/home_search.dart';
+import 'package:flutter_yanxuan/page/search/search_page.dart';
 import 'package:flutter_yanxuan/router.dart';
 import 'package:provider/provider.dart';
 
@@ -175,7 +175,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
   void clickSearchButton(String searchText) {
     Navigator.push(context, FadeRoute(builder: (ocntext) {
-      return HomeSearchPage(
+      return SearchPage(
         hintText: searchText,
       );
     }));
