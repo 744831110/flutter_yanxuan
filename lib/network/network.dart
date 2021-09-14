@@ -22,16 +22,26 @@ class NetWorkHelper {
   late Dio _dio;
   Dio get dio => _dio;
 
+  late Dio _yxDio;
+  Dio get yxDio => _yxDio;
+
   NetWorkHelper._() {
-    BaseOptions _releaseBaseOption = new BaseOptions(
-      baseUrl: localHost,
-      connectTimeout: 60 * 1000,
-      receiveTimeout: 60 * 1000,
-    );
+    BaseOptions _releaseBaseOption = new BaseOptions(baseUrl: localHost, connectTimeout: 60 * 1000, receiveTimeout: 60 * 1000, headers: {
+      "Cookie":
+          "yx_aui=ad574a64-cdca-43aa-ab18-dc0048a37884; yx_stat_seesionId=ad574a64-cdca-43aa-ab18-dc0048a378841624592226597; yx_stat_seqList=v_a175ec6d43%7Cv_a175ec6d43%3B-1; yx_s_device=cb18109-401a-2a1e-9b3e-3ec9b3ee77; yx_s_tid=tid_web_389c13839ab6457793060c597e23651b_e9d6823eb_1; mail_psc_fingerprint=a154cdec1427352a1f94d126b5c08065; yx_but_id=4a1698afcb5048c4b092bf75ecd667928f1e9528e3696fa1_v1_nl;"
+    });
     _dio = new Dio(_releaseBaseOption);
     _dio.interceptors.add(NetworkCheckInterceptor());
     _dio.interceptors.add(LocalDataInterceptor());
     _dio.interceptors.add(NetworkErrorInterceptor());
+
+    BaseOptions _yxBaseOption = new BaseOptions(baseUrl: "https://m.you.163.com/", connectTimeout: 60 * 1000, receiveTimeout: 60 * 1000, headers: {
+      "Cookie":
+          "yx_aui=ad574a64-cdca-43aa-ab18-dc0048a37884; yx_stat_seesionId=ad574a64-cdca-43aa-ab18-dc0048a378841624592226597; yx_stat_seqList=v_a175ec6d43%7Cv_a175ec6d43%3B-1; yx_s_device=cb18109-401a-2a1e-9b3e-3ec9b3ee77; yx_s_tid=tid_web_389c13839ab6457793060c597e23651b_e9d6823eb_1; mail_psc_fingerprint=a154cdec1427352a1f94d126b5c08065; yx_but_id=4a1698afcb5048c4b092bf75ecd667928f1e9528e3696fa1_v1_nl;"
+    });
+    _yxDio = new Dio(_yxBaseOption);
+    _yxDio.interceptors.add(NetworkCheckInterceptor());
+    _yxDio.interceptors.add(NetworkErrorInterceptor());
   }
 }
 

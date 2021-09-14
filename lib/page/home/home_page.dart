@@ -60,7 +60,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       stream: homeViewModel.homeDataStream,
       errorView: CustomErrorWidget(),
       emptyView: CustomEmptyWidget(),
-      builder: (context, data) {
+      dataBuilder: (context, data, child) {
         return Stack(
           alignment: Alignment.center,
           children: [
@@ -145,7 +145,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                           .map(
                             (e) => NetworkStreamBuilder(
                               stream: e,
-                              builder: (context, model) {
+                              dataBuilder: (context, model, child) {
                                 return HomeTabGridWidget();
                               },
                             ),
@@ -174,7 +174,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   }
 
   void clickSearchButton(String searchText) {
-    Navigator.push(context, FadeRoute(builder: (ocntext) {
+    Navigator.push(context, SearchPageRouter(builder: (ocntext) {
       return SearchPage(
         hintText: searchText,
       );

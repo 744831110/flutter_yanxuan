@@ -1,10 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_yanxuan/common/colors.dart';
 import 'package:flutter_yanxuan/common/network_stream_builder.dart';
+import 'package:flutter_yanxuan/common/view/button.dart';
+import 'package:flutter_yanxuan/page/home/home_bar.dart';
 import 'package:flutter_yanxuan/page/search/model/search_model.dart';
 import 'package:flutter_yanxuan/page/search/viewmodel/search_viewmodel.dart';
+import 'package:flutter_yanxuan/router.dart';
+import 'package:provider/provider.dart';
 
 typedef SearchTextCallback = void Function(String searchText);
+
+enum SearchPageContentState {
+  keyword,
+  fuzzySearch,
+  searchList,
+}
 
 class SearchPage extends StatefulWidget {
   final String hintText;
@@ -16,8 +27,247 @@ class SearchPage extends StatefulWidget {
 }
 
 class _SearchPageState extends State<SearchPage> {
+  final fuzzyViewModel = FuzzySearchViewModel();
+  final textEditController = TextEditingController();
+  SearchPageContentState contentState = SearchPageContentState.keyword;
+  bool hasEnterSearchListPage = false;
+  @override
+  void initState() {
+    super.initState();
+    textEditController.addListener(() {
+      setState(() {
+        if (textEditController.text.isNotEmpty) {
+          this.contentState = SearchPageContentState.fuzzySearch;
+        }
+      });
+      fuzzyViewModel.requestFuzzySearchData(textEditController.text);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    SearchPageRouter route = ModalRoute.of(context) as SearchPageRouter;
+    route.isCupertinoPop = true;
+    return Scaffold(
+      body: SafeArea(
+        child: Column(
+          children: [
+            _topSearchBar(),
+            _getSearchPageContent(),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _topSearchBar() {
+    return _HomeSearchTopBar(
+      textEditController: textEditController,
+      hintText: widget.hintText,
+      state: this.contentState,
+    );
+  }
+
+  Widget _getSearchPageContent() {
+    switch (contentState) {
+      case SearchPageContentState.keyword:
+        return _HomeKeywordPage(
+          searchCallback: startSearch,
+        );
+      case SearchPageContentState.fuzzySearch:
+        return _buildFuzzySearchWidget();
+      case SearchPageContentState.searchList:
+        return Container();
+    }
+  }
+
+  Widget _buildFuzzySearchWidget() {
+    return NetworkStreamBuilder<FuzzySearchModel>(
+      stream: fuzzyViewModel.fuzzySearchDataStream,
+      dataBuilder: (context, data, child) {
+        return _HomeFuzzySearchPage();
+      },
+    );
+  }
+
+  void startSearch(String searchText) {
+    setState(() {
+      this.contentState = SearchPageContentState.searchList;
+    });
+  }
+}
+
+class _HomeSearchTopBar extends StatefulWidget {
+  final TextEditingController textEditController;
+  final String hintText;
+  final SearchPageContentState state;
+  _HomeSearchTopBar({required this.textEditController, required this.hintText, required this.state});
+  @override
+  State<StatefulWidget> createState() {
+    return _HomeSearchTopBarState();
+  }
+}
+
+class _HomeSearchTopBarState extends State<_HomeSearchTopBar> {
+  double positionedLeft = 15.0;
+  bool isShowCancelButton = true;
+  EdgeInsets cancelButtonPadding = EdgeInsets.zero;
+
+  FocusNode _focusNode = FocusNode();
+
+  @override
+  void initState() {
+    super.initState();
+    _focusNode.addListener(() {
+      setState(() {
+        isShowCancelButton = widget.state == SearchPageContentState.keyword || widget.state == SearchPageContentState.fuzzySearch;
+      });
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (widget.state == SearchPageContentState.searchList) {
+      positionedLeft = 40.0;
+    }
+    return Container(
+      height: 46,
+      decoration: BoxDecoration(border: Border(bottom: BorderSide(color: YXColorGray1, width: 0.7))),
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          Positioned(
+            left: 5.0,
+            child: backButton(),
+          ),
+          AnimatedPositioned(
+            left: positionedLeft,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                searchTextField(),
+                Container(
+                  width: 64,
+                  child: AnimatedPadding(
+                    padding: EdgeInsets.zero,
+                    child: cancelButton(),
+                    duration: Duration(milliseconds: 300),
+                  ),
+                )
+              ],
+            ),
+            duration: Duration(milliseconds: 300),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget searchTextField() {
+    return AnimatedContainer(
+      duration: Duration(milliseconds: 300),
+      height: 30,
+      width: calculate(),
+      decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(15)), color: YXColorGray16),
+      child: Row(
+        children: [
+          Padding(
+            padding: EdgeInsets.only(left: 10),
+            child: Image(
+              image: AssetImage("assets/images/nav_search_ic_normal.png"),
+              width: 15,
+              height: 15,
+            ),
+          ),
+          Expanded(
+            child: Padding(
+              padding: EdgeInsets.only(left: 5, right: 10, bottom: 2),
+              child: TextField(
+                controller: widget.textEditController,
+                maxLines: 1,
+                style: TextStyle(textBaseline: TextBaseline.alphabetic),
+                cursorColor: YXColorBlue6,
+                decoration: InputDecoration(
+                  border: InputBorder.none,
+                  hintText: widget.hintText,
+                  hintStyle: TextStyle(fontSize: 14, color: YXColorGray21),
+                  hintMaxLines: 1,
+                  isDense: true,
+                  contentPadding: EdgeInsets.zero,
+                ),
+                onSubmitted: (searchText) {},
+              ),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget cancelButton() {
+    return TextButton(
+      onPressed: clickCancelButton,
+      style: ButtonStyle(
+        overlayColor: MaterialStateProperty.all(Colors.transparent),
+      ),
+      child: Text(
+        "取消",
+        style: TextStyle(fontSize: 15, color: Colors.black, fontWeight: FontWeight.w300),
+      ),
+    );
+  }
+
+  Widget backButton() {
+    return CommonImageButton(
+      normalImage: Image(
+        fit: BoxFit.fill,
+        image: AssetImage("assets/images/icon_nav_back_baritem_normal.png"),
+      ),
+      onTap: (isSelect) {},
+    );
+  }
+
+  void clickCancelButton() {
+    Navigator.pop(context);
+  }
+
+  double calculate() {
+    double screenWidth = MediaQuery.of(this.context).size.width;
+    double right = isShowCancelButton ? 64 : 10;
+    return screenWidth - positionedLeft - right;
+  }
+}
+
+class _HomeFuzzySearchPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<FuzzySearchModel>(
+      builder: (context, data, child) {
+        return Expanded(
+          child: ListView(
+            children: data.data.map((e) => _SearchFuzzyCell(model: e)).toList(),
+          ),
+        );
+      },
+    );
+  }
+}
+
+class _HomeKeywordPage extends StatefulWidget {
+  final SearchCallback searchCallback;
+  _HomeKeywordPage({required this.searchCallback});
+  @override
+  State<StatefulWidget> createState() {
+    return _HomeKeywordPageState();
+  }
+}
+
+class _HomeKeywordPageState extends State<_HomeKeywordPage> {
+  final viewModel = SearchKeywordViewModel();
   List<String> searchRecordList = [];
-  final viewModel = SearchViewModel();
+  int maxRow = 1;
+
   @override
   void initState() {
     super.initState();
@@ -31,87 +281,60 @@ class _SearchPageState extends State<SearchPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: Column(
-          children: [
-            _topSearchBar(),
-            Expanded(
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 15),
-                child: NetworkStreamBuilder<SearchModel>(
-                  stream: viewModel.homeSearchDataStream,
-                  errorView: searchContent(),
-                  emptyView: searchContent(),
-                  builder: (context, data) {
-                    return searchContent(model: data);
-                  },
-                ),
-              ),
-            ),
-          ],
+    return Expanded(
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 15),
+        child: NetworkStreamBuilder<SearchModel>(
+          stream: viewModel.homeSearchDataStream,
+          snapShotBuilder: (context, snapshot, child) {
+            return CustomScrollView(
+              slivers: [
+                _buildHistoricalRecord(this.searchRecordList),
+                SliverPadding(padding: EdgeInsets.symmetric(vertical: 5)),
+                _hotSearchWidget(snapshot.data),
+                _hotCategoryTitle(),
+                _hotCategoryWidget(snapshot.data),
+              ],
+            );
+          },
         ),
       ),
     );
   }
 
-  Widget searchContent({SearchModel? model}) {
-    List<Widget> slivers = [];
+  Widget _buildHistoricalRecord(List<String> searchRecordList) {
     if (searchRecordList.length > 0) {
-      slivers.add(
-        SliverToBoxAdapter(
-          child: HomeSearchHistoricalRecordWidget(
-            update: () {
-              setState(() {});
-            },
-            didSelectSearchText: startSearch,
-          ),
+      return SliverToBoxAdapter(
+        child: _HomeSearchKeywordWidget(
+          title: "历史记录",
+          keywordList: searchRecordList.map((e) => SearchKeywordModel.record(e)).toList(),
+          searchTextCallback: startSearch,
+          expandCallback: (isselect) {
+            setState(() {
+              maxRow = isselect ? 10 : 1;
+            });
+          },
+          maxRow: maxRow,
+          deleteCallback: () {},
         ),
       );
+    } else {
+      return SliverToBoxAdapter(child: Container());
     }
-    if (model != null) {
-      List<Widget> list = [
-        SliverPadding(padding: EdgeInsets.symmetric(vertical: 5)),
-        _hotSearchWidget(model),
-        _hotCategoryTitle(),
-        _hotCategoryWidget(model),
-      ];
-      slivers.addAll(list);
-    }
-    return CustomScrollView(
-      slivers: slivers,
-    );
   }
 
-  Widget _hotSearchWidget(SearchModel model) {
+  Widget _hotSearchWidget(SearchModel? model) {
     return SliverToBoxAdapter(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            "热门搜索",
-            style: TextStyle(fontSize: 17, color: Colors.black, fontWeight: FontWeight.w400),
-          ),
-          SizedBox(
-            height: 10,
-          ),
-          RichText(
-              text: TextSpan(
-            children: model.hotSearch
-                .map(
-                  (e) => WidgetSpan(
-                    child: _SearchWidgetSpanContent(
-                      text: e.searchText,
-                      callback: startSearch,
-                      isHot: e.isHot,
-                    ),
-                  ),
-                )
-                .toList(),
-            style: TextStyle(height: 2),
-          )),
-        ],
-      ),
+      child: model == null
+          ? Container()
+          : _HomeSearchKeywordWidget(
+              title: "热门搜索",
+              keywordList: model.hotSearch,
+              isShowDeleteButton: false,
+              isShowExpandButton: false,
+              searchTextCallback: startSearch,
+              maxRow: 10,
+            ),
     );
   }
 
@@ -127,7 +350,10 @@ class _SearchPageState extends State<SearchPage> {
     );
   }
 
-  SliverGrid _hotCategoryWidget(SearchModel model) {
+  Widget _hotCategoryWidget(SearchModel? model) {
+    if (model == null) {
+      return SliverToBoxAdapter(child: Container());
+    }
     return SliverGrid(
       delegate: SliverChildBuilderDelegate(
         (context, index) {
@@ -156,162 +382,183 @@ class _SearchPageState extends State<SearchPage> {
     );
   }
 
-  Widget _topSearchBar() {
-    return Container(
-      height: 46,
-      decoration: BoxDecoration(border: Border(bottom: BorderSide(color: YXColorGray30))),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Expanded(
-            child: Container(
-              margin: EdgeInsets.only(left: 15),
-              height: 30,
-              decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(15)), color: YXColorGray16),
-              child: Row(
-                children: [
-                  Padding(
-                    padding: EdgeInsets.only(left: 10),
-                    child: Image(
-                      image: AssetImage("assets/images/nav_search_ic_normal.png"),
-                      width: 15,
-                      height: 15,
-                    ),
-                  ),
-                  Expanded(
-                    child: Padding(
-                      padding: EdgeInsets.only(left: 5, right: 10, bottom: 2),
-                      child: TextField(
-                        maxLines: 1,
-                        style: TextStyle(textBaseline: TextBaseline.alphabetic),
-                        decoration: InputDecoration(border: InputBorder.none, hintText: widget.hintText, hintMaxLines: 1, isDense: true, contentPadding: EdgeInsets.zero),
-                      ),
-                    ),
-                  )
-                ],
-              ),
-            ),
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            style: ButtonStyle(
-              overlayColor: MaterialStateProperty.all(Colors.transparent),
-            ),
-            child: Text(
-              "取消",
-              style: TextStyle(fontSize: 16, color: Colors.black, fontWeight: FontWeight.w300),
-            ),
-          ),
-        ],
-      ),
-    );
+  void deleteHistoricalRecord() {
+    setState(() {
+      this.searchRecordList = [];
+    });
+    viewModel.removeAllRecord();
   }
 
   void startSearch(String searchText) {
     print("search text is $searchText");
+    widget.searchCallback(searchText);
   }
 }
 
-class HomeSearchHistoricalRecordWidget extends StatefulWidget {
-  final VoidCallback update;
-  final SearchTextCallback? didSelectSearchText;
+class _HomeSearchKeywordWidget extends StatelessWidget {
+  final String title;
+  final void Function(bool isSelect)? expandCallback;
+  final VoidCallback? deleteCallback;
+  final SearchTextCallback? searchTextCallback;
+  final List<SearchKeywordModel> keywordList;
+  final bool isShowExpandButton;
+  final bool isShowDeleteButton;
+  final int maxRow;
 
-  HomeSearchHistoricalRecordWidget({required this.update, this.didSelectSearchText});
-  @override
-  State<StatefulWidget> createState() {
-    return _HomeSearchHistoricalRecordWidgetState();
-  }
-}
+  _HomeSearchKeywordWidget(
+      {required this.title, this.expandCallback, this.deleteCallback, this.searchTextCallback, required this.keywordList, this.isShowDeleteButton = true, this.isShowExpandButton = true, this.maxRow = 1});
 
-class _HomeSearchHistoricalRecordWidgetState extends State<HomeSearchHistoricalRecordWidget> {
-  String recordButtonImagePath = "assets/images/downarrow_ic_normal.png";
-  int maxRow = 1;
-  List<String> dataList = ["保温杯", "保温", "保温杯", "保温杯", "保", "保温杯", "保温杯", "保温", "保温杯", "保温", "保温杯", "保温" "保温杯", "保温"];
   @override
   Widget build(BuildContext context) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              "历史记录",
+              title,
               style: TextStyle(fontSize: 17, color: Colors.black, fontWeight: FontWeight.w400),
             ),
-            Container(
-              width: 30,
-              child: TextButton(
-                style: ButtonStyle(
-                  overlayColor: MaterialStateProperty.all(Colors.transparent),
-                  padding: MaterialStateProperty.all(EdgeInsets.zero),
-                ),
-                child: Image(
-                  image: AssetImage("assets/images/commodityorder_icon_delete_normal.png"),
-                ),
-                onPressed: () {},
-              ),
-            )
+            _buildDeleteButton()
           ],
         ),
-        Stack(
-          alignment: Alignment.center,
-          children: [
-            Padding(
-              padding: EdgeInsets.only(right: 30),
-              child: RichText(
-                maxLines: maxRow,
-                text: TextSpan(
-                  children: dataList
-                      .map(
-                        (e) => WidgetSpan(
-                          child: _SearchWidgetSpanContent(
-                            text: e,
-                            callback: didSelectRecord,
-                          ),
-                        ),
-                      )
-                      .toList(),
-                  style: TextStyle(height: 2),
-                ),
+        ConstrainedBox(
+          constraints: BoxConstraints(
+            minWidth: double.infinity,
+          ),
+          child: Stack(
+            alignment: Alignment.centerLeft,
+            children: [
+              _buildKeyword(),
+              Positioned(
+                right: 0,
+                top: 0,
+                child: _buildExpandButton(),
               ),
-            ),
-            Positioned(
-              right: 0,
-              top: 0,
-              child: GestureDetector(
-                onTap: () {
-                  if (recordButtonImagePath == "assets/images/downarrow_ic_normal.png") {
-                    recordButtonImagePath = "assets/images/uparrow_ic_normal.png";
-                    maxRow = 10;
-                  } else {
-                    recordButtonImagePath = "assets/images/downarrow_ic_normal.png";
-                    maxRow = 1;
-                  }
-                  widget.update();
-                },
-                child: Container(
-                  width: 20,
-                  height: 20,
-                  margin: EdgeInsets.only(right: 5, top: 3),
-                  child: Image(
-                    image: AssetImage(recordButtonImagePath),
-                    fit: BoxFit.fill,
-                  ),
-                ),
-              ),
-            )
-          ],
-        ),
+            ],
+          ),
+        )
       ],
     );
   }
 
+  Widget _buildDeleteButton() {
+    return Visibility(
+      visible: isShowDeleteButton,
+      child: Container(
+        width: 30,
+        child: TextButton(
+          style: ButtonStyle(
+            overlayColor: MaterialStateProperty.all(Colors.transparent),
+            padding: MaterialStateProperty.all(EdgeInsets.zero),
+          ),
+          child: Image(
+            image: AssetImage("assets/images/commodityorder_icon_delete_normal.png"),
+          ),
+          onPressed: () {
+            if (this.deleteCallback != null) {
+              this.deleteCallback!();
+            }
+          },
+        ),
+      ),
+    );
+  }
+
+  Widget _buildExpandButton() {
+    return Visibility(
+      visible: isShowExpandButton,
+      child: CommonImageButton(
+        normalImage: Image(
+          image: AssetImage("assets/images/downarrow_ic_normal.png"),
+          fit: BoxFit.fill,
+        ),
+        selectImage: Image(
+          image: AssetImage("assets/images/uparrow_ic_normal.png"),
+          fit: BoxFit.fill,
+        ),
+        width: 20,
+        height: 20,
+        margin: EdgeInsets.only(right: 5, top: 3),
+        onTap: (isSelect) {
+          if (this.expandCallback != null) {
+            this.expandCallback!(isSelect);
+          }
+        },
+      ),
+    );
+  }
+
+  Widget _buildKeyword() {
+    return Padding(
+      padding: EdgeInsets.only(right: 30),
+      child: RichText(
+        maxLines: maxRow,
+        text: TextSpan(
+          children: keywordList
+              .map(
+                (e) => WidgetSpan(
+                  child: _SearchWidgetSpanContent(
+                    isHot: e.isHot,
+                    text: e.searchText,
+                    callback: didSelectRecord,
+                  ),
+                ),
+              )
+              .toList(),
+          style: TextStyle(height: 2),
+        ),
+      ),
+    );
+  }
+
   void didSelectRecord(String content) {
-    if (widget.didSelectSearchText != null) {
-      widget.didSelectSearchText!(content);
+    if (this.searchTextCallback != null) {
+      this.searchTextCallback!(content);
     }
+  }
+}
+
+class _SearchFuzzyCell extends StatelessWidget {
+  final FuzzySearchItemModel model;
+  _SearchFuzzyCell({required this.model});
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 46,
+      margin: EdgeInsets.symmetric(horizontal: 10),
+      decoration: BoxDecoration(border: Border(bottom: BorderSide(color: YXColorGray1, width: 0.7))),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text("${model.title}", style: TextStyle(fontSize: 14, color: Colors.black)),
+          Wrap(
+            spacing: 5,
+            children: model.describes.map(
+              (describe) {
+                return ConstrainedBox(
+                  constraints: BoxConstraints(minWidth: 55),
+                  child: Container(
+                    decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(14)), color: YXColorGray12),
+                    height: 28,
+                    child: Center(
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 5),
+                        child: Text(
+                          "$describe",
+                          style: TextStyle(fontSize: 11, color: Colors.black, fontWeight: FontWeight.w300),
+                        ),
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ).toList(),
+          )
+        ],
+      ),
+    );
   }
 }
 
@@ -355,55 +602,5 @@ class _SearchWidgetSpanContent extends StatelessWidget {
     if (this.callback != null) {
       this.callback!(text);
     }
-  }
-}
-
-class CustomWrapDelegate extends FlowDelegate {
-  final double lineSpacing; // 行间距
-  final double columnSpacing; // 列间距
-  final int maxRow; // 最大行数
-
-  CustomWrapDelegate({this.lineSpacing = 0, this.columnSpacing = 0, this.maxRow = 0}); // 最大行
-
-  @override
-  void paintChildren(FlowPaintingContext context) {
-    double x = 0;
-    double y = 0;
-    int row = 0;
-    //计算每一个子widget的位置
-    for (int i = 0; i < context.childCount; i++) {
-      var size = context.getChildSize(i) ?? Size.zero;
-      var w = x + size.width;
-      if (w <= context.size.width) {
-        context.paintChild(
-          i,
-          transform: Matrix4.translationValues(x, y, 0.0),
-        );
-        x = w + columnSpacing;
-      } else {
-        row += 1;
-        if (maxRow != 0 && row >= maxRow) {
-          return;
-        }
-        x = 0;
-        y += size.height + lineSpacing;
-        //绘制子widget(有优化)
-        context.paintChild(
-          i,
-          transform: Matrix4.translationValues(x, y, 0.0), //位移
-        );
-        x = size.width + columnSpacing;
-      }
-    }
-  }
-
-  @override
-  Size getSize(BoxConstraints constraints) {
-    return Size(double.infinity, 40);
-  }
-
-  @override
-  bool shouldRepaint(CustomWrapDelegate oldDelegate) {
-    return oldDelegate != this || this.maxRow != oldDelegate.maxRow;
   }
 }

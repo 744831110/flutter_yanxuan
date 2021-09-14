@@ -40,14 +40,12 @@ class HomeViewModel {
     for (int i = 0; i < tabType.length; i++) {
       int type = tabType[i];
       NetWorkHelper.instance.dio.get("home/tab/json", queryParameters: {"type": type}).then((value) {
-        print(value);
         final model = HomeTabModel.fromJson(value.data);
         _tabStreamControllers[i].add(model);
         _pageList[i] = 0;
         _tabModels[i] = model;
         _tabStreamControllers[i].add(model);
       }).catchError((error) {
-        print(error);
         _tabStreamControllers[i].addError(error);
       });
     }

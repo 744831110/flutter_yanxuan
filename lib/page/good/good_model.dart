@@ -29,9 +29,7 @@ class GoodItemModel {
         subtitle = json["subtitle"],
         tags = (json["tags"] as List).map((e) => GoodItemTagModel.fromJson(e)).toList(),
         originPrice = double.parse(json["originPrice"]).toString(),
-        discountPrice = json["discountPrice"].toString().isEmpty ? null : double.parse(json["discountPrice"]).toString() {
-    print("title $title");
-  }
+        discountPrice = json["discountPrice"].toString().isEmpty ? null : double.parse(json["discountPrice"]).toString() {}
 }
 
 class GoodItemTagModel {
