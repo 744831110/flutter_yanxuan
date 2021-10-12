@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 class SearchKeywordModel {
   final String searchText;
   final bool isHot;
@@ -41,4 +43,78 @@ class FuzzySearchItemModel {
   FuzzySearchItemModel.fromJson(Map<String, dynamic> json)
       : title = json["title"],
         describes = json["describes"].cast<String>();
+}
+
+class SearchFilterTypeResult {
+  final List<SearchFilterTypeModel> fliterTypes;
+  SearchFilterTypeResult(this.fliterTypes);
+  SearchFilterTypeResult.fromJson(Map<String, dynamic> json) : fliterTypes = (json["fliterTypes"] as List).map((e) => SearchFilterTypeModel.fromJson(e)).toList();
+}
+
+class SearchFilterTypeModel {
+  final String filterType;
+  final String describe;
+  final List<SearchFilterSubtypeModel> filterSubtypes;
+  SearchFilterTypeModel(this.filterType, this.describe, this.filterSubtypes);
+  SearchFilterTypeModel.fromJson(Map<String, dynamic> json)
+      : filterType = json["filterType"],
+        describe = json["describe"],
+        filterSubtypes = (json["filterSubtypes"] as List).map((e) => SearchFilterSubtypeModel.fromJson(e)).toList();
+}
+
+class SearchFilterSubtypeModel {
+  final int subtype;
+  final String describe;
+  SearchFilterSubtypeModel(this.subtype, this.describe);
+  SearchFilterSubtypeModel.fromJson(Map<String, dynamic> json)
+      : subtype = int.parse(json["subtype"]),
+        describe = json["describe"];
+}
+
+class SearchListChangeNotifer extends ChangeNotifier {
+  Map<int, List<int>> _selectSubTypes = {};
+  int _selectType = -1;
+  SearchFilterTypeResult _result;
+  SearchListChangeNotifer({required SearchFilterTypeResult result}) : _result = result;
+  void removeAllSelectSubtype(int type) {
+    _selectSubTypes.remove(type);
+    notifyListeners();
+  }
+
+  void removeFromSelectSubtype(int type, int subType) {
+    _selectSubTypes[type]?.remove(subType);
+    notifyListeners();
+  }
+
+  void addSelectSubtype(int type, int subType) {
+    if (!_selectSubTypes.containsKey(type)) {
+      _selectSubTypes[type] = [];
+    }
+    _selectSubTypes[type]?.add(subType);
+    notifyListeners();
+  }
+
+  Map<int, List<int>> get selectSubTypes => _selectSubTypes;
+
+  // bool isContainerSubtype(int type, int subType) {
+  //   if (_selectSubTypes.containsKey(type)) {
+  //     return _selectSubTypes[type]!.contains(subType);
+  //   } else {
+  //     return false;
+  //   }
+  // }
+
+  set selectType(int selectType) {
+    _selectType = selectType;
+    notifyListeners();
+  }
+
+  int get selectType => _selectType;
+
+  set result(SearchFilterTypeResult result) {
+    _result = result;
+    notifyListeners();
+  }
+
+  SearchFilterTypeResult get result => _result;
 }

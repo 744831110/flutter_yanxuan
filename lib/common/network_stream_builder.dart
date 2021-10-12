@@ -8,7 +8,7 @@ class NetworkStreamBuilder<T> extends StatelessWidget {
   final Stream<T> stream;
   // 已处理snapshot返回data，如果无data或出现错误，显示emptyview或errorview
   final NetworkStreamWidgetBuilder<T>? dataBuilder;
-  // 自行处理snapshot
+  // 自行处理snapshot，无emptyview，errorview以及provider
   final NetworkStreamSnapShotBuilder<T>? snapShotBuilder;
   final Widget? errorView;
   final Widget? emptyView;

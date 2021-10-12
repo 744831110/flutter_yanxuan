@@ -1,0 +1,130 @@
+{
+    "fliterTypes": [
+        {
+            "filterType": "0",
+            "describe": "优惠",
+            "filterSubtypes": [
+                {
+                    "subtype": "0",
+                    "describe": "全部特惠"
+                },
+                {
+                    "subtype": "1",
+                    "describe": "限时购"
+                },
+                {
+                    "subtype": "2",
+                    "describe": "特价"
+                },
+                {
+                    "subtype": "3",
+                    "describe": "秒杀"
+                },
+                {
+                    "subtype": "4",
+                    "describe": "定金购"
+                },
+                {
+                    "subtype": "5",
+                    "describe": "可用红包"
+                },
+                {
+                    "subtype": "6",
+                    "describe": "可用劵"
+                }
+            ]
+        },
+        {
+            "filterType": "1",
+            "describe": "种类",
+            "filterSubtypes": [
+                {
+                    "subtype": "0",
+                    "describe": "面"
+                },
+                {
+                    "subtype": "1",
+                    "describe": "烘干零食"
+                },
+                {
+                    "subtype": "2",
+                    "describe": "零食"
+                },
+                {
+                    "subtype": "3",
+                    "describe": "鲜肉零食"
+                }
+            ]
+        },
+        {
+            "filterType": "2",
+            "describe": "口味",
+            "filterSubtypes": [
+                {
+                    "subtype": "0",
+                    "describe": "原味"
+                },
+                {
+                    "subtype": "1",
+                    "describe": "香辣味"
+                },
+                {
+                    "subtype": "2",
+                    "describe": "其他"
+                }
+            ]
+        },
+        {
+            "filterType": "3",
+            "describe": "包装",
+            "filterSubtypes": [
+                {
+                    "subtype": "0",
+                    "describe": "盒装"
+                },
+                {
+                    "subtype": "1",
+                    "describe": "箱装"
+                }
+            ]
+        },
+        {
+            "filterType": "4",
+            "describe": "适用对象",
+            "filterSubtypes": [
+                {
+                    "subtype": "0",
+                    "describe": "犬"
+                },
+                {
+                    "subtype": "1",
+                    "describe": "猫"
+                }
+            ]
+        },
+        {
+            "filterType": "5",
+            "describe": "食用方法",
+            "filterSubtypes": [
+                {
+                    "subtype": "0",
+                    "describe": "即食"
+                },
+                {
+                    "subtype": "1",
+                    "describe": "冲泡"
+                }
+            ]
+        },
+        {
+            "filterType": "6",
+            "describe": "其他排序方式",
+            "filterSubtypes": [
+                {
+                    "subtype": "0",
+                    "describe": "通用排序"
+                }
+            ]
+        }
+    ]
+}

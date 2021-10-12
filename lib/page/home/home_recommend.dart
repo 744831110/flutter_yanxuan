@@ -453,12 +453,19 @@ class _HomeTabItemWidgetState extends State<HomeTabItemWidget> {
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.only(top: 10, bottom: 10),
+                  padding: EdgeInsets.only(top: 5),
                   child: HomeTabPriceWidget(
                     originPrice: widget.model.originPrice,
                     discountPrice: widget.model.discountPrice,
                   ),
                 ),
+                Padding(
+                  padding: EdgeInsets.only(top: 5, bottom: 10),
+                  child: HomeTabItemSpeciaDescribeWidget(
+                    describe: widget.model.speciaDescribe,
+                    describeTitle: widget.model.speciaDescribeTitle,
+                  ),
+                )
               ],
             ),
           )
@@ -491,18 +498,10 @@ class HomeTabItemImageWidget extends StatelessWidget {
                     : Container(),
           ),
           Positioned(
-            bottom: 0,
-            left: 0,
-            right: 0,
-            child: model.speciaDescribeType == 0
-                ? describeWidget(model.describe)
-                : HomeTabItemSpeciaDescribeWidget(
-                    describe: model.speciaDescribe,
-                    describeTitle: model.speciaDescribeTitle,
-                    discountPrice: model.discountPrice,
-                    describeType: model.speciaDescribeType,
-                  ),
-          )
+            left: 5,
+            top: 5,
+            child: leftDescribeWidget(model.leftDescribe),
+          ),
         ],
       ),
     );
@@ -532,6 +531,27 @@ class HomeTabItemImageWidget extends StatelessWidget {
     );
   }
 
+  Widget leftDescribeWidget(String content) {
+    if (content.isEmpty) {
+      return Container();
+    }
+    return Container(
+      width: 18,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.all(Radius.circular(2)),
+        border: Border.all(color: YXColorYellow9),
+        color: YXColorGray31,
+      ),
+      child: Center(
+        child: Text(
+          model.leftDescribe,
+          style: TextStyle(color: YXColorYellow9),
+          textAlign: TextAlign.center,
+        ),
+      ),
+    );
+  }
+
   Widget describeWidget(String content) {
     return Container(
       decoration: BoxDecoration(
@@ -553,96 +573,140 @@ class HomeTabItemImageWidget extends StatelessWidget {
 
 class HomeTabItemSpeciaDescribeWidget extends StatelessWidget {
   final String describeTitle;
-  final String? discountPrice;
   final String describe;
-  final int describeType;
-
-  HomeTabItemSpeciaDescribeWidget({required this.describe, required this.discountPrice, required this.describeTitle, required this.describeType});
+  HomeTabItemSpeciaDescribeWidget({required this.describe, required this.describeTitle});
   @override
   Widget build(BuildContext context) {
+    if (describe.isEmpty && describeTitle.isEmpty) {
+      return Container(
+        height: 10,
+      );
+    }
     return Container(
-      height: 32,
-      child: Stack(
-        children: [
-          Positioned(
-            left: 0,
-            right: 0,
-            bottom: 0,
-            child: Container(
-              color: getColorFromType(describeType),
-              height: 26,
+      decoration: BoxDecoration(
+        color: YXColorRed7,
+        borderRadius: BorderRadius.all(Radius.circular(13)),
+      ),
+      height: 26,
+      padding: EdgeInsets.all(3),
+      child: Row(mainAxisSize: MainAxisSize.max, children: [
+        Container(
+          decoration: BoxDecoration(color: redColor, borderRadius: BorderRadius.all(Radius.circular(11))),
+          height: 22,
+          padding: EdgeInsets.symmetric(horizontal: 5),
+          child: Center(
+            child: Text(
+              "$describeTitle",
+              style: TextStyle(color: Colors.white, fontSize: 10),
             ),
           ),
-          Positioned(
-            left: 0,
-            bottom: 0,
-            top: 0,
-            child: Row(
-              children: [
-                Container(
-                  decoration: BoxDecoration(
-                    image: DecorationImage(image: AssetImage(getDecorationImageFromType(describeType)), centerSlice: Rect.fromLTWH(10, 0, 3, 5)),
-                  ),
-                  child: Padding(
-                    padding: EdgeInsets.only(right: 10, left: 5),
-                    child: Column(
-                      children: [
-                        Text(
-                          describeTitle,
-                          style: TextStyle(color: getTextColorFromType(describeType), fontSize: 12, fontWeight: FontWeight.w500),
-                        ),
-                        discountPrice == null
-                            ? Container()
-                            : Text(
-                                discountPrice!,
-                                style: TextStyle(color: getTextColorFromType(describeType), fontSize: 12, fontWeight: FontWeight.w600),
-                              )
-                      ],
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(left: 5, top: 5),
-                  child: Text(
-                    describe,
-                    style: TextStyle(color: getTextColorFromType(describeType), fontSize: 11, fontWeight: FontWeight.w400),
-                  ),
-                )
-              ],
+        ),
+        Expanded(
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 3),
+            child: Text(
+              "$describe",
+              style: TextStyle(color: redTextColor, fontSize: 9, fontWeight: FontWeight.bold),
             ),
-          )
-        ],
-      ),
+          ),
+        ),
+      ]),
     );
   }
-
-  Color getTextColorFromType(int type) {
-    if (type == 2) {
-      return Colors.black;
-    } else if (type == 1) {
-      return Colors.white;
-    }
-    return Colors.white;
-  }
-
-  String getDecorationImageFromType(int type) {
-    if (type == 2) {
-      return "assets/images/common_list_nor_foreshow_bg_normal.png";
-    } else if (type == 1) {
-      return "assets/images/common_list_nor_official_bg_normal.png";
-    }
-    return "assets/images/common_list_nor_official_bg_normal.png";
-  }
-
-  Color getColorFromType(int type) {
-    if (type == 2) {
-      return YXColorYellow25;
-    } else if (type == 1) {
-      return YXColorOrange;
-    }
-    return YXColorOrange;
-  }
 }
+
+// class HomeTabItemSpeciaDescribeWidget extends StatelessWidget {
+//   final String describeTitle;
+//   final String? discountPrice;
+//   final String describe;
+//   final int describeType;
+
+//   HomeTabItemSpeciaDescribeWidget({required this.describe, required this.discountPrice, required this.describeTitle, required this.describeType});
+//   @override
+//   Widget build(BuildContext context) {
+//     return Container(
+//       height: 32,
+//       child: Stack(
+//         children: [
+//           Positioned(
+//             left: 0,
+//             right: 0,
+//             bottom: 0,
+//             child: Container(
+//               color: getColorFromType(describeType),
+//               height: 26,
+//             ),
+//           ),
+//           Positioned(
+//             left: 0,
+//             bottom: 0,
+//             top: 0,
+//             child: Row(
+//               children: [
+//                 Container(
+//                   decoration: BoxDecoration(
+//                     image: DecorationImage(image: AssetImage(getDecorationImageFromType(describeType)), centerSlice: Rect.fromLTWH(10, 0, 3, 5)),
+//                   ),
+//                   child: Padding(
+//                     padding: EdgeInsets.only(right: 10, left: 5),
+//                     child: Column(
+//                       children: [
+//                         Text(
+//                           describeTitle,
+//                           style: TextStyle(color: getTextColorFromType(describeType), fontSize: 12, fontWeight: FontWeight.w500),
+//                         ),
+//                         discountPrice == null
+//                             ? Container()
+//                             : Text(
+//                                 discountPrice!,
+//                                 style: TextStyle(color: getTextColorFromType(describeType), fontSize: 12, fontWeight: FontWeight.w600),
+//                               )
+//                       ],
+//                     ),
+//                   ),
+//                 ),
+//                 Padding(
+//                   padding: EdgeInsets.only(left: 5, top: 5),
+//                   child: Text(
+//                     describe,
+//                     style: TextStyle(color: getTextColorFromType(describeType), fontSize: 11, fontWeight: FontWeight.w400),
+//                   ),
+//                 )
+//               ],
+//             ),
+//           )
+//         ],
+//       ),
+//     );
+//   }
+
+//   Color getTextColorFromType(int type) {
+//     if (type == 2) {
+//       return Colors.black;
+//     } else if (type == 1) {
+//       return Colors.white;
+//     }
+//     return Colors.white;
+//   }
+
+//   String getDecorationImageFromType(int type) {
+//     if (type == 2) {
+//       return "assets/images/common_list_nor_foreshow_bg_normal.png";
+//     } else if (type == 1) {
+//       return "assets/images/common_list_nor_official_bg_normal.png";
+//     }
+//     return "assets/images/common_list_nor_official_bg_normal.png";
+//   }
+
+//   Color getColorFromType(int type) {
+//     if (type == 2) {
+//       return YXColorYellow25;
+//     } else if (type == 1) {
+//       return YXColorOrange;
+//     }
+//     return YXColorOrange;
+//   }
+// }
 
 class HomeTabItemPriceTagWidget extends StatelessWidget {
   final int type;

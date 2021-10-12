@@ -64,3 +64,19 @@ class FuzzySearchViewModel {
     });
   }
 }
+
+class SerchListViewModel {
+  StreamController<SearchFilterTypeResult> _searchFilterTypeController = BehaviorSubject<SearchFilterTypeResult>();
+  Stream<SearchFilterTypeResult> get searchFilterTypeStream => _searchFilterTypeController.stream;
+  void requestSearchFilterTypes(String keyword, {Map<int, List<int>>? subtypes}) {
+    if (keyword.isEmpty) {
+      return;
+    }
+    NetWorkHelper.instance.dio.get("home/search/filter/type", queryParameters: {"subtype": subtypes}).then((value) {
+      final model = SearchFilterTypeResult.fromJson(value.data);
+      _searchFilterTypeController.add(model);
+    }).catchError((error) {
+      _searchFilterTypeController.addError(error);
+    });
+  }
+}

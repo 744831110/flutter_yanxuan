@@ -141,6 +141,9 @@ class HomeAppBar extends StatelessWidget {
     );
   }
 
+  /**
+   * 适配全面屏
+   **/
   double get _barHeight {
     if (progress > 100) {
       return 73;

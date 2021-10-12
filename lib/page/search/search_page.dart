@@ -10,6 +10,8 @@ import 'package:flutter_yanxuan/router.dart';
 import 'package:provider/provider.dart';
 
 typedef SearchTextCallback = void Function(String searchText);
+typedef SortTypeCallback = void Function(int sortType);
+typedef RefreshSearchListCallback = void Function(Map<int, List<int>> subType);
 
 enum SearchPageContentState {
   keyword,
@@ -28,9 +30,10 @@ class SearchPage extends StatefulWidget {
 
 class _SearchPageState extends State<SearchPage> {
   final fuzzyViewModel = FuzzySearchViewModel();
+  final searchListViewModel = SerchListViewModel();
   final textEditController = TextEditingController();
+  String? searchText;
   SearchPageContentState contentState = SearchPageContentState.keyword;
-  bool hasEnterSearchListPage = false;
   @override
   void initState() {
     super.initState();
@@ -65,6 +68,12 @@ class _SearchPageState extends State<SearchPage> {
       textEditController: textEditController,
       hintText: widget.hintText,
       state: this.contentState,
+      backButtonCallback: () {
+        Navigator.pop(context);
+      },
+      cancelButtonCallback: () {
+        Navigator.pop(context);
+      },
     );
   }
 
@@ -77,7 +86,7 @@ class _SearchPageState extends State<SearchPage> {
       case SearchPageContentState.fuzzySearch:
         return _buildFuzzySearchWidget();
       case SearchPageContentState.searchList:
-        return Container();
+        return _buildSearchListWidget();
     }
   }
 
@@ -90,8 +99,27 @@ class _SearchPageState extends State<SearchPage> {
     );
   }
 
+  Widget _buildSearchListWidget() {
+    return NetworkStreamBuilder<SearchFilterTypeResult>(
+      stream: searchListViewModel.searchFilterTypeStream,
+      needProvider: false,
+      dataBuilder: (context, data, child) {
+        return _HomeSearchListPage(
+          result: data,
+          refreshListCallback: (Map<int, List<int>> subtypes) {
+            if (this.searchText != null) {
+              searchListViewModel.requestSearchFilterTypes(this.searchText!, subtypes: subtypes);
+            }
+          },
+        );
+      },
+    );
+  }
+
   void startSearch(String searchText) {
     setState(() {
+      this.searchText = searchText;
+      this.searchListViewModel.requestSearchFilterTypes(searchText);
       this.contentState = SearchPageContentState.searchList;
     });
   }
@@ -101,7 +129,9 @@ class _HomeSearchTopBar extends StatefulWidget {
   final TextEditingController textEditController;
   final String hintText;
   final SearchPageContentState state;
-  _HomeSearchTopBar({required this.textEditController, required this.hintText, required this.state});
+  final VoidCallback? backButtonCallback;
+  final VoidCallback? cancelButtonCallback;
+  _HomeSearchTopBar({required this.textEditController, required this.hintText, required this.state, this.backButtonCallback, this.cancelButtonCallback});
   @override
   State<StatefulWidget> createState() {
     return _HomeSearchTopBarState();
@@ -130,6 +160,7 @@ class _HomeSearchTopBarState extends State<_HomeSearchTopBar> {
     if (widget.state == SearchPageContentState.searchList) {
       positionedLeft = 40.0;
     }
+    isShowCancelButton = widget.state == SearchPageContentState.keyword || widget.state == SearchPageContentState.fuzzySearch;
     return Container(
       height: 46,
       decoration: BoxDecoration(border: Border(bottom: BorderSide(color: YXColorGray1, width: 0.7))),
@@ -186,6 +217,7 @@ class _HomeSearchTopBarState extends State<_HomeSearchTopBar> {
               child: TextField(
                 controller: widget.textEditController,
                 maxLines: 1,
+                focusNode: _focusNode,
                 style: TextStyle(textBaseline: TextBaseline.alphabetic),
                 cursorColor: YXColorBlue6,
                 decoration: InputDecoration(
@@ -207,7 +239,11 @@ class _HomeSearchTopBarState extends State<_HomeSearchTopBar> {
 
   Widget cancelButton() {
     return TextButton(
-      onPressed: clickCancelButton,
+      onPressed: () {
+        if (widget.cancelButtonCallback != null) {
+          widget.cancelButtonCallback!();
+        }
+      },
       style: ButtonStyle(
         overlayColor: MaterialStateProperty.all(Colors.transparent),
       ),
@@ -219,38 +255,23 @@ class _HomeSearchTopBarState extends State<_HomeSearchTopBar> {
   }
 
   Widget backButton() {
-    return CommonImageButton(
-      normalImage: Image(
+    return CommonButton(
+      child: Image(
         fit: BoxFit.fill,
         image: AssetImage("assets/images/icon_nav_back_baritem_normal.png"),
       ),
-      onTap: (isSelect) {},
+      onTap: (isSelect) {
+        if (widget.backButtonCallback != null) {
+          widget.backButtonCallback!();
+        }
+      },
     );
-  }
-
-  void clickCancelButton() {
-    Navigator.pop(context);
   }
 
   double calculate() {
     double screenWidth = MediaQuery.of(this.context).size.width;
     double right = isShowCancelButton ? 64 : 10;
     return screenWidth - positionedLeft - right;
-  }
-}
-
-class _HomeFuzzySearchPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Consumer<FuzzySearchModel>(
-      builder: (context, data, child) {
-        return Expanded(
-          child: ListView(
-            children: data.data.map((e) => _SearchFuzzyCell(model: e)).toList(),
-          ),
-        );
-      },
-    );
   }
 }
 
@@ -469,12 +490,12 @@ class _HomeSearchKeywordWidget extends StatelessWidget {
   Widget _buildExpandButton() {
     return Visibility(
       visible: isShowExpandButton,
-      child: CommonImageButton(
-        normalImage: Image(
+      child: CommonButton(
+        child: Image(
           image: AssetImage("assets/images/downarrow_ic_normal.png"),
           fit: BoxFit.fill,
         ),
-        selectImage: Image(
+        selectChild: Image(
           image: AssetImage("assets/images/uparrow_ic_normal.png"),
           fit: BoxFit.fill,
         ),
@@ -517,6 +538,21 @@ class _HomeSearchKeywordWidget extends StatelessWidget {
     if (this.searchTextCallback != null) {
       this.searchTextCallback!(content);
     }
+  }
+}
+
+class _HomeFuzzySearchPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<FuzzySearchModel>(
+      builder: (context, data, child) {
+        return Expanded(
+          child: ListView(
+            children: data.data.map((e) => _SearchFuzzyCell(model: e)).toList(),
+          ),
+        );
+      },
+    );
   }
 }
 
@@ -602,5 +638,416 @@ class _SearchWidgetSpanContent extends StatelessWidget {
     if (this.callback != null) {
       this.callback!(text);
     }
+  }
+}
+
+class _HomeSearchListPage extends StatefulWidget {
+  final SearchFilterTypeResult result;
+  final RefreshSearchListCallback refreshListCallback;
+  _HomeSearchListPage({required this.result, required this.refreshListCallback});
+  @override
+  State<StatefulWidget> createState() {
+    return _HomeSearchListPageState();
+  }
+}
+
+class _HomeSearchListPageState extends State<_HomeSearchListPage> {
+  @override
+  Widget build(BuildContext context) {
+    return ChangeNotifierProvider(
+      create: (_) => SearchListChangeNotifer(result: widget.result),
+      child: Expanded(
+        child: Container(
+          child: Stack(
+            children: [
+              Positioned.fill(
+                top: 83,
+                child: Container(color: Colors.white),
+              ),
+              _HomeSearchListConditionWidget(
+                confirmCallback: () {
+                  final notifer = context.read<SearchListChangeNotifer>();
+                  widget.refreshListCallback(notifer.selectSubTypes);
+                },
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _HomeSearchListConditionWidget extends StatefulWidget {
+  final VoidCallback confirmCallback;
+  _HomeSearchListConditionWidget({required this.confirmCallback});
+  @override
+  State<StatefulWidget> createState() {
+    return _HomeSearchListConditionWidgetState();
+  }
+}
+
+class _HomeSearchListConditionWidgetState extends State<_HomeSearchListConditionWidget> {
+  @override
+  Widget build(BuildContext context) {
+    return alignmentWithFill(
+      context.watch<SearchListChangeNotifer>().selectType != -1,
+      child: Column(
+        children: [
+          _HomeSearchListSortWidget(
+            filterCallback: () {},
+            sortTypeCallback: (type) {},
+          ),
+          searchFilterWidget(context.watch<SearchListChangeNotifer>().selectType != -1)
+        ],
+      ),
+    );
+  }
+
+  void changeSortType(int sortType) {}
+
+  Widget alignmentWithFill(bool isFill, {required Widget child}) {
+    if (isFill) {
+      return Positioned.fill(
+        left: 0,
+        top: 0,
+        child: child,
+      );
+    } else {
+      return Align(
+        alignment: Alignment.topCenter,
+        widthFactor: 1,
+        child: child,
+      );
+    }
+  }
+
+  Widget searchFilterWidget(bool isFill) {
+    if (isFill) {
+      return Expanded(
+        child: _HomeSearchFilterWidget(
+          confirmCallBack: didClickConfirm,
+        ),
+      );
+    } else {
+      return _HomeSearchFilterWidget(
+        confirmCallBack: didClickConfirm,
+      );
+    }
+  }
+
+  void didClickConfirm() {
+    widget.confirmCallback();
+  }
+}
+
+class _HomeSearchListSortWidget extends StatefulWidget {
+  final SortTypeCallback sortTypeCallback;
+  final VoidCallback filterCallback;
+  _HomeSearchListSortWidget({required this.sortTypeCallback, required this.filterCallback});
+  @override
+  State<StatefulWidget> createState() {
+    return _HomeSearchListSortWidgetState();
+  }
+}
+
+class _HomeSearchListSortWidgetState extends State<_HomeSearchListSortWidget> {
+  List<bool> sortButtonSelect = [true, false, false, false, false];
+  List<bool> isDownSortButton = [false, false];
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisSize: MainAxisSize.max,
+      children: [
+        _buildSortWidget("综合", index: 0),
+        _buildSortWidget("销量", index: 1),
+        _buildUpDownSortWidget("价格", index: 2, isDownIndex: 0),
+        _buildUpDownSortWidget("上新", index: 3, isDownIndex: 1),
+        _buildFilterButton(4),
+      ],
+    );
+  }
+
+  Widget _buildSortWidget(String title, {required int index}) {
+    return Expanded(
+      flex: 1,
+      child: TextButton(
+        onPressed: () {
+          setState(() {
+            if (!sortButtonSelect[index]) {
+              sortButtonSelect.fillRange(0, sortButtonSelect.length, false);
+              sortButtonSelect[index] = true;
+              changeSortType(index);
+            }
+          });
+        },
+        child: Text(
+          title,
+          style: TextStyle(fontSize: 14, color: sortButtonSelect[index] ? redTextColor : Colors.black, fontWeight: FontWeight.normal),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildUpDownSortWidget(String title, {required int index, required int isDownIndex}) {
+    String imageUrl = sortButtonSelect[index]
+        ? isDownSortButton[isDownIndex]
+            ? "assets/images/ic_search_arrow_down_normal.png"
+            : "assets/images/ic_search_arrow_up_normal.png"
+        : "assets/images/ic_search_arrow_normal.png";
+    return Expanded(
+      flex: 1,
+      child: TextButton(
+        onPressed: () {
+          setState(() {
+            if (sortButtonSelect[index]) {
+              isDownSortButton[isDownIndex] = !isDownSortButton[isDownIndex];
+            } else {
+              sortButtonSelect.fillRange(0, sortButtonSelect.length, false);
+              sortButtonSelect[index] = true;
+              isDownSortButton[isDownIndex] = false;
+            }
+            changeSortType(index + (isDownSortButton[isDownIndex] ? 1 : 0));
+          });
+        },
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              title,
+              style: TextStyle(fontSize: 14, color: sortButtonSelect[index] ? redTextColor : Colors.black, fontWeight: FontWeight.normal),
+            ),
+            SizedBox(width: 5),
+            Image(image: AssetImage(imageUrl))
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildFilterButton(int index) {
+    String imageUrl = sortButtonSelect[index] ? "assets/images/ic_search_screen_select.png" : "assets/images/ic_search_screen_select.png";
+    return Expanded(
+      flex: 1,
+      child: TextButton(
+        onPressed: didClickFilterButton,
+        child: Row(
+          children: [
+            Text(
+              "筛选",
+              style: TextStyle(fontSize: 14, color: sortButtonSelect[index] ? redTextColor : Colors.black, fontWeight: FontWeight.normal),
+            ),
+            Image(image: AssetImage(imageUrl))
+          ],
+        ),
+      ),
+    );
+  }
+
+  void changeSortType(int type) {
+    widget.sortTypeCallback(type);
+  }
+
+  void didClickFilterButton() {
+    widget.filterCallback();
+  }
+}
+
+class _HomeSearchFilterWidget extends StatefulWidget {
+  final VoidCallback confirmCallBack;
+  _HomeSearchFilterWidget({required this.confirmCallBack});
+  @override
+  State<StatefulWidget> createState() {
+    return _HomeSearchFilterWidgetState();
+  }
+}
+
+class _HomeSearchFilterWidgetState extends State<_HomeSearchFilterWidget> {
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: _buildContent(),
+    );
+  }
+
+  List<Widget> _buildContent() {
+    final notifier = context.watch<SearchListChangeNotifer>();
+    final selectType = notifier.selectType;
+    final result = notifier.result;
+    final typeList = result.fliterTypes.map((e) => e.describe).toList();
+    List<Widget> widgets = [];
+    widgets.add(Padding(
+      padding: EdgeInsets.symmetric(horizontal: 5),
+      child: Row(
+        children: typeList.sublist(0, 2).asMap().keys.map((e) {
+          return _typeItemWidget(typeList[e], e);
+        }).toList(),
+      ),
+    ));
+    if (selectType != -1) {
+      widgets.add(_buildSubtypeWidget(selectType, result.fliterTypes[selectType].filterSubtypes));
+      widgets.add(_buildSubtypeControlButton());
+      widgets.add(_maskWidget());
+    }
+    return widgets;
+  }
+
+  Widget _typeItemWidget(String title, int index) {
+    bool isExpand = index == context.watch<SearchListChangeNotifer>().selectType;
+    return Expanded(
+      flex: 1,
+      child: Container(
+        height: 35,
+        child: GestureDetector(
+          onTap: () {
+            didSelectItem(index);
+          },
+          child: Container(
+            margin: EdgeInsets.only(left: 5, right: 5, bottom: isExpand ? 0 : 10),
+            height: 25,
+            decoration: BoxDecoration(color: YXColorGray16, borderRadius: isExpand ? BorderRadius.only(topLeft: Radius.circular(12.5), topRight: Radius.circular(12.5)) : BorderRadius.all(Radius.circular(12.5))),
+            child: Align(
+              alignment: Alignment.topCenter,
+              child: Padding(
+                padding: EdgeInsets.only(top: 5),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      title,
+                      style: TextStyle(fontSize: 12, color: isExpand ? redTextColor : Colors.black, fontWeight: FontWeight.normal),
+                    ),
+                    SizedBox(
+                      width: 5,
+                    ),
+                    Image(
+                      image: AssetImage(isExpand ? "assets/images/icon_common_arrow_up.png" : "assets/images/icon_common_arrow_down.png"),
+                      width: 12,
+                      height: 12,
+                    )
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSubtypeWidget(int selectType, List<SearchFilterSubtypeModel> subtypeList) {
+    final list = context.read<SearchListChangeNotifer>().selectSubTypes[selectType];
+    return Container(
+      width: double.infinity,
+      color: YXColorGray16,
+      padding: EdgeInsets.symmetric(horizontal: 20),
+      child: Wrap(
+        direction: Axis.horizontal,
+        children: subtypeList.map((e) {
+          return CommonButton(
+            isInnerControlSelectState: false,
+            isSelect: list?.contains(subtypeList.indexOf(e)) ?? false,
+            width: (MediaQuery.of(context).size.width - 40) / 2,
+            height: 50,
+            onTap: (isSelecct) {
+              didSelectSubtype(isSelecct, selectType, e.subtype);
+            },
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                e.describe,
+                style: TextStyle(fontSize: 12, color: Colors.black, fontWeight: FontWeight.normal),
+              ),
+            ),
+            selectChild: Align(
+              alignment: Alignment.centerLeft,
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Image(image: AssetImage("assets/images/icon_search_check_normal.png"), width: 12, height: 12),
+                  SizedBox(width: 5),
+                  Text(
+                    e.describe,
+                    style: TextStyle(fontSize: 12, color: redTextColor, fontWeight: FontWeight.normal),
+                  )
+                ],
+              ),
+            ),
+            initIsSelect: list == null ? false : list.contains(e.subtype),
+          );
+        }).toList(),
+      ),
+    );
+  }
+
+  Widget _buildSubtypeControlButton() {
+    return Row(
+      mainAxisSize: MainAxisSize.max,
+      children: [
+        Expanded(
+          flex: 1,
+          child: CommonButton(
+            height: 40,
+            onTap: (_) => didSelectReset(),
+            child: Center(
+              child: Text(
+                "重置",
+                style: TextStyle(fontSize: 14, color: Colors.black),
+              ),
+            ),
+          ),
+        ),
+        Expanded(
+          flex: 1,
+          child: CommonButton(
+            height: 40,
+            decoration: BoxDecoration(color: Colors.red),
+            onTap: (_) => didSelectConfirm(),
+            child: Center(
+              child: Text(
+                "确定",
+                style: TextStyle(fontSize: 14, color: Colors.white),
+              ),
+            ),
+          ),
+        )
+      ],
+    );
+  }
+
+  Widget _maskWidget() {
+    return Expanded(
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        child: Container(color: YXColorBlackAlpha50),
+      ),
+    );
+  }
+
+  void didSelectItem(int index) {
+    final notifier = context.read<SearchListChangeNotifer>();
+    if (notifier.selectType == index) {
+      notifier.selectType = -1;
+    } else {
+      notifier.selectType = index;
+    }
+  }
+
+  void didSelectSubtype(bool isSelect, int type, int subType) {
+    final notifer = context.read<SearchListChangeNotifer>();
+    if (!isSelect) {
+      notifer.addSelectSubtype(type, subType);
+    } else {
+      notifer.removeFromSelectSubtype(type, subType);
+    }
+  }
+
+  void didSelectReset() {
+    final notifier = context.read<SearchListChangeNotifer>();
+    notifier.removeAllSelectSubtype(notifier.selectType);
+  }
+
+  void didSelectConfirm() {
+    widget.confirmCallBack();
   }
 }
