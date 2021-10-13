@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_yanxuan/page/good/good_model.dart';
 
 class SearchKeywordModel {
   final String searchText;
@@ -71,6 +72,12 @@ class SearchFilterSubtypeModel {
         describe = json["describe"];
 }
 
+class SearchListModel {
+  final List<GoodItemModel> items;
+  SearchListModel(this.items);
+  SearchListModel.fromJson(Map<String, dynamic> json) : items = (json["items"] as List).map((e) => GoodItemModel.fromJson(e)).toList();
+}
+
 class SearchListChangeNotifer extends ChangeNotifier {
   Map<int, List<int>> _selectSubTypes = {};
   int _selectType = -1;
@@ -95,15 +102,6 @@ class SearchListChangeNotifer extends ChangeNotifier {
   }
 
   Map<int, List<int>> get selectSubTypes => _selectSubTypes;
-
-  // bool isContainerSubtype(int type, int subType) {
-  //   if (_selectSubTypes.containsKey(type)) {
-  //     return _selectSubTypes[type]!.contains(subType);
-  //   } else {
-  //     return false;
-  //   }
-  // }
-
   set selectType(int selectType) {
     _selectType = selectType;
     notifyListeners();

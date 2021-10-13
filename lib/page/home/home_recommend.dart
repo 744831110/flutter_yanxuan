@@ -545,7 +545,7 @@ class HomeTabItemImageWidget extends StatelessWidget {
       child: Center(
         child: Text(
           model.leftDescribe,
-          style: TextStyle(color: YXColorYellow9),
+          style: TextStyle(color: YXColorYellow9, fontSize: 12),
           textAlign: TextAlign.center,
         ),
       ),

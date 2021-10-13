@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:flutter_yanxuan/common/colors.dart';
 import 'package:flutter_yanxuan/common/network_stream_builder.dart';
 import 'package:flutter_yanxuan/common/view/button.dart';
 import 'package:flutter_yanxuan/page/home/home_bar.dart';
+import 'package:flutter_yanxuan/page/home/home_recommend.dart';
 import 'package:flutter_yanxuan/page/search/model/search_model.dart';
 import 'package:flutter_yanxuan/page/search/viewmodel/search_viewmodel.dart';
 import 'package:flutter_yanxuan/router.dart';
@@ -66,6 +68,7 @@ class _SearchPageState extends State<SearchPage> {
   Widget _topSearchBar() {
     return _HomeSearchTopBar(
       textEditController: textEditController,
+      searchCallback: startSearch,
       hintText: widget.hintText,
       state: this.contentState,
       backButtonCallback: () {
@@ -94,24 +97,21 @@ class _SearchPageState extends State<SearchPage> {
     return NetworkStreamBuilder<FuzzySearchModel>(
       stream: fuzzyViewModel.fuzzySearchDataStream,
       dataBuilder: (context, data, child) {
-        return _HomeFuzzySearchPage();
+        return _HomeFuzzySearchPage(
+          searchCallback: startSearch,
+        );
       },
     );
   }
 
   Widget _buildSearchListWidget() {
-    return NetworkStreamBuilder<SearchFilterTypeResult>(
-      stream: searchListViewModel.searchFilterTypeStream,
-      needProvider: false,
-      dataBuilder: (context, data, child) {
-        return _HomeSearchListPage(
-          result: data,
-          refreshListCallback: (Map<int, List<int>> subtypes) {
-            if (this.searchText != null) {
-              searchListViewModel.requestSearchFilterTypes(this.searchText!, subtypes: subtypes);
-            }
-          },
-        );
+    return _HomeSearchListPage(
+      listStream: this.searchListViewModel.searchListModelStream,
+      filterTypeStream: this.searchListViewModel.searchFilterTypeStream,
+      refreshListCallback: (Map<int, List<int>> subtypes) {
+        if (this.searchText != null) {
+          searchListViewModel.requestSearchFilterTypes(this.searchText!, subtypes: subtypes);
+        }
       },
     );
   }
@@ -119,7 +119,9 @@ class _SearchPageState extends State<SearchPage> {
   void startSearch(String searchText) {
     setState(() {
       this.searchText = searchText;
+      textEditController.text = searchText;
       this.searchListViewModel.requestSearchFilterTypes(searchText);
+      this.searchListViewModel.requestSearchList(searchText);
       this.contentState = SearchPageContentState.searchList;
     });
   }
@@ -131,7 +133,8 @@ class _HomeSearchTopBar extends StatefulWidget {
   final SearchPageContentState state;
   final VoidCallback? backButtonCallback;
   final VoidCallback? cancelButtonCallback;
-  _HomeSearchTopBar({required this.textEditController, required this.hintText, required this.state, this.backButtonCallback, this.cancelButtonCallback});
+  final SearchCallback searchCallback;
+  _HomeSearchTopBar({required this.textEditController, required this.hintText, required this.state, this.backButtonCallback, this.cancelButtonCallback, required this.searchCallback});
   @override
   State<StatefulWidget> createState() {
     return _HomeSearchTopBarState();
@@ -218,7 +221,7 @@ class _HomeSearchTopBarState extends State<_HomeSearchTopBar> {
                 controller: widget.textEditController,
                 maxLines: 1,
                 focusNode: _focusNode,
-                style: TextStyle(textBaseline: TextBaseline.alphabetic),
+                style: TextStyle(textBaseline: TextBaseline.alphabetic, fontSize: 14),
                 cursorColor: YXColorBlue6,
                 decoration: InputDecoration(
                   border: InputBorder.none,
@@ -228,7 +231,13 @@ class _HomeSearchTopBarState extends State<_HomeSearchTopBar> {
                   isDense: true,
                   contentPadding: EdgeInsets.zero,
                 ),
-                onSubmitted: (searchText) {},
+                onSubmitted: (searchText) {
+                  if (searchText.isEmpty) {
+                    widget.searchCallback(widget.hintText);
+                  } else {
+                    widget.searchCallback(searchText);
+                  }
+                },
               ),
             ),
           )
@@ -411,7 +420,6 @@ class _HomeKeywordPageState extends State<_HomeKeywordPage> {
   }
 
   void startSearch(String searchText) {
-    print("search text is $searchText");
     widget.searchCallback(searchText);
   }
 }
@@ -542,13 +550,24 @@ class _HomeSearchKeywordWidget extends StatelessWidget {
 }
 
 class _HomeFuzzySearchPage extends StatelessWidget {
+  final SearchCallback searchCallback;
+  _HomeFuzzySearchPage({required this.searchCallback});
   @override
   Widget build(BuildContext context) {
     return Consumer<FuzzySearchModel>(
       builder: (context, data, child) {
         return Expanded(
           child: ListView(
-            children: data.data.map((e) => _SearchFuzzyCell(model: e)).toList(),
+            children: data.data
+                .map(
+                  (e) => GestureDetector(
+                    onTap: () {
+                      searchCallback(e.title);
+                    },
+                    child: _SearchFuzzyCell(model: e),
+                  ),
+                )
+                .toList(),
           ),
         );
       },
@@ -642,9 +661,10 @@ class _SearchWidgetSpanContent extends StatelessWidget {
 }
 
 class _HomeSearchListPage extends StatefulWidget {
-  final SearchFilterTypeResult result;
+  final Stream<SearchFilterTypeResult> filterTypeStream;
+  final Stream<SearchListModel> listStream;
   final RefreshSearchListCallback refreshListCallback;
-  _HomeSearchListPage({required this.result, required this.refreshListCallback});
+  _HomeSearchListPage({required this.filterTypeStream, required this.refreshListCallback, required this.listStream});
   @override
   State<StatefulWidget> createState() {
     return _HomeSearchListPageState();
@@ -654,26 +674,47 @@ class _HomeSearchListPage extends StatefulWidget {
 class _HomeSearchListPageState extends State<_HomeSearchListPage> {
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => SearchListChangeNotifer(result: widget.result),
-      child: Expanded(
-        child: Container(
-          child: Stack(
-            children: [
-              Positioned.fill(
-                top: 83,
-                child: Container(color: Colors.white),
+    return NetworkStreamBuilder<SearchFilterTypeResult>(
+      stream: widget.filterTypeStream,
+      needProvider: false,
+      dataBuilder: (ctx, result, _) {
+        return ChangeNotifierProvider(
+          create: (_) => SearchListChangeNotifer(result: result),
+          child: Expanded(
+            child: Container(
+              child: Stack(
+                children: [
+                  Positioned.fill(
+                      top: 83,
+                      child: NetworkStreamBuilder<SearchListModel>(
+                        stream: widget.listStream,
+                        needProvider: false,
+                        dataBuilder: (c, listResult, _) {
+                          return StaggeredGridView.countBuilder(
+                            crossAxisCount: 4,
+                            shrinkWrap: true,
+                            crossAxisSpacing: 5,
+                            mainAxisSpacing: 5,
+                            itemCount: listResult.items.length,
+                            itemBuilder: (context, index) {
+                              return HomeTabItemWidget(model: listResult.items[index]);
+                            },
+                            staggeredTileBuilder: (index) => StaggeredTile.fit(2),
+                          );
+                        },
+                      )),
+                  _HomeSearchListConditionWidget(
+                    confirmCallback: () {
+                      final notifer = context.read<SearchListChangeNotifer>();
+                      widget.refreshListCallback(notifer.selectSubTypes);
+                    },
+                  ),
+                ],
               ),
-              _HomeSearchListConditionWidget(
-                confirmCallback: () {
-                  final notifer = context.read<SearchListChangeNotifer>();
-                  widget.refreshListCallback(notifer.selectSubTypes);
-                },
-              ),
-            ],
+            ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }
@@ -698,7 +739,7 @@ class _HomeSearchListConditionWidgetState extends State<_HomeSearchListCondition
             filterCallback: () {},
             sortTypeCallback: (type) {},
           ),
-          searchFilterWidget(context.watch<SearchListChangeNotifer>().selectType != -1)
+          searchFilterWidget(context.watch<SearchListChangeNotifer>().selectType != -1),
         ],
       ),
     );
