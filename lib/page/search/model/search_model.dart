@@ -50,15 +50,16 @@ class SearchFilterTypeResult {
   final List<SearchFilterTypeModel> fliterTypes;
   SearchFilterTypeResult(this.fliterTypes);
   SearchFilterTypeResult.fromJson(Map<String, dynamic> json) : fliterTypes = (json["fliterTypes"] as List).map((e) => SearchFilterTypeModel.fromJson(e)).toList();
+  SearchFilterTypeResult.empty() : fliterTypes = [];
 }
 
 class SearchFilterTypeModel {
-  final String filterType;
+  final int filterType;
   final String describe;
   final List<SearchFilterSubtypeModel> filterSubtypes;
   SearchFilterTypeModel(this.filterType, this.describe, this.filterSubtypes);
   SearchFilterTypeModel.fromJson(Map<String, dynamic> json)
-      : filterType = json["filterType"],
+      : filterType = int.parse(json["filterType"]),
         describe = json["describe"],
         filterSubtypes = (json["filterSubtypes"] as List).map((e) => SearchFilterSubtypeModel.fromJson(e)).toList();
 }
@@ -82,7 +83,12 @@ class SearchListChangeNotifer extends ChangeNotifier {
   Map<int, List<int>> _selectSubTypes = {};
   int _selectType = -1;
   SearchFilterTypeResult _result;
-  SearchListChangeNotifer({required SearchFilterTypeResult result}) : _result = result;
+  SearchListChangeNotifer() : _result = SearchFilterTypeResult.empty();
+  void setFilterTypeResult(SearchFilterTypeResult result) {
+    _result = result;
+    // notifyListeners();
+  }
+
   void removeAllSelectSubtype(int type) {
     _selectSubTypes.remove(type);
     notifyListeners();

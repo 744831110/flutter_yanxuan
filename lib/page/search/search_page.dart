@@ -53,13 +53,17 @@ class _SearchPageState extends State<SearchPage> {
   Widget build(BuildContext context) {
     SearchPageRouter route = ModalRoute.of(context) as SearchPageRouter;
     route.isCupertinoPop = true;
-    return Scaffold(
-      body: SafeArea(
-        child: Column(
-          children: [
-            _topSearchBar(),
-            _getSearchPageContent(),
-          ],
+    return ChangeNotifierProvider(
+      create: (_) => SearchListChangeNotifer(),
+      child: Scaffold(
+        endDrawer: SearchDrawer(),
+        body: SafeArea(
+          child: Column(
+            children: [
+              _topSearchBar(),
+              _getSearchPageContent(),
+            ],
+          ),
         ),
       ),
     );
@@ -281,6 +285,186 @@ class _HomeSearchTopBarState extends State<_HomeSearchTopBar> {
     double screenWidth = MediaQuery.of(this.context).size.width;
     double right = isShowCancelButton ? 64 : 10;
     return screenWidth - positionedLeft - right;
+  }
+}
+
+class SearchDrawer extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final result = context.read<SearchListChangeNotifer>().result;
+    return SizedBox(
+      width: MediaQuery.of(context).size.width - 100,
+      child: Drawer(
+        child: ListView.builder(
+          itemBuilder: (context, index) {
+            if (index == 0) {
+              return SearchDrawerPriceCell();
+            } else {
+              return SearchDrawerExpandCell(model: result.fliterTypes[index - 1]);
+            }
+          },
+          itemCount: result.fliterTypes.length + 1,
+        ),
+      ),
+    );
+  }
+}
+
+class SearchDrawerPriceCell extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    double textfieldWidth = (MediaQuery.of(context).size.width - 100 - 40 - 15) / 2;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Padding(
+          padding: EdgeInsets.only(left: 10),
+          child: Text(
+            "价格区间",
+            style: TextStyle(fontSize: 15, color: Colors.black, fontWeight: FontWeight.w300),
+          ),
+        ),
+        SizedBox(
+          height: 5,
+        ),
+        Row(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            priceTextField("最低价", textfieldWidth),
+            Container(width: 15, height: 1, color: Colors.black),
+            priceTextField("最高价", textfieldWidth),
+          ],
+        ),
+        SizedBox(
+          height: 5,
+        )
+      ],
+    );
+  }
+
+  Widget priceTextField(String hintText, double width) {
+    return Container(
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.black, width: 0.5),
+        borderRadius: BorderRadius.all(Radius.circular(2)),
+      ),
+      width: width,
+      padding: EdgeInsets.symmetric(vertical: 3),
+      child: TextField(
+        textAlign: TextAlign.center,
+        style: TextStyle(textBaseline: TextBaseline.alphabetic, fontSize: 15),
+        decoration: InputDecoration(
+          border: InputBorder.none,
+          hintText: hintText,
+          hintStyle: TextStyle(fontSize: 14, color: YXColorGray21),
+          hintMaxLines: 1,
+          isDense: true,
+          contentPadding: EdgeInsets.zero,
+        ),
+      ),
+    );
+  }
+}
+
+class SearchDrawerExpandCell extends StatefulWidget {
+  SearchDrawerExpandCell({required this.model});
+  final SearchFilterTypeModel model;
+  @override
+  State<StatefulWidget> createState() {
+    return SearchDrawerExpandCellState();
+  }
+}
+
+class SearchDrawerExpandCellState extends State<SearchDrawerExpandCell> {
+  bool isExpand = false;
+  @override
+  Widget build(BuildContext context) {
+    List<SearchFilterSubtypeModel> list = widget.model.filterSubtypes;
+    final selectSubtypeList = context.read<SearchListChangeNotifer>().selectSubTypes[widget.model.filterType];
+    if (!isExpand && widget.model.filterSubtypes.length > 3) {
+      list = widget.model.filterSubtypes.sublist(0, 3);
+    }
+
+    final itemWidth = (MediaQuery.of(context).size.width - 100 - 40) / 3;
+
+    final selectString = widget.model.filterSubtypes
+        .where((e) {
+          return selectSubtypeList?.contains(e.subtype) ?? false;
+        })
+        .map((e) => e.describe)
+        .toList()
+        .join("，");
+
+    return Padding(
+      padding: EdgeInsets.only(left: 10, right: 10, top: 10),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: Padding(
+                  padding: EdgeInsets.only(right: 15),
+                  child: Text(
+                    "${widget.model.describe} ${selectString.isEmpty ? "" : "($selectString)"}",
+                    style: TextStyle(fontSize: 15, color: Colors.black, fontWeight: FontWeight.w300),
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
+                    softWrap: false,
+                  ),
+                ),
+              ),
+              widget.model.filterSubtypes.length > 3
+                  ? SizedBox(
+                      height: 30,
+                      child: CommonButton(
+                        child: Text("up"),
+                        onTap: (_) {
+                          setState(() {
+                            isExpand = !isExpand;
+                          });
+                        },
+                      ))
+                  : Container()
+            ],
+          ),
+          Wrap(
+            spacing: 10,
+            children: list
+                .map(
+                  (e) => GestureDetector(
+                    onTap: () {
+                      final notifer = context.read<SearchListChangeNotifer>();
+                      if (!(selectSubtypeList?.contains(e.subtype) ?? false)) {
+                        notifer.addSelectSubtype(widget.model.filterType, e.subtype);
+                      } else {
+                        notifer.removeFromSelectSubtype(widget.model.filterType, e.subtype);
+                      }
+                      setState(() {});
+                    },
+                    child: Container(
+                      width: itemWidth,
+                      decoration: BoxDecoration(border: Border.all(color: Colors.black, width: 0.5), borderRadius: BorderRadius.all(Radius.circular(2))),
+                      margin: EdgeInsets.symmetric(vertical: 5),
+                      padding: EdgeInsets.symmetric(vertical: 3),
+                      child: Center(
+                        child: Text(
+                          "${(selectSubtypeList?.contains(e.subtype) ?? false) ? "✓ " : ""}${e.describe}",
+                          style: TextStyle(fontSize: 14, color: Colors.black, fontWeight: FontWeight.w300),
+                        ),
+                      ),
+                    ),
+                  ),
+                )
+                .toList(),
+          ),
+        ],
+      ),
+    );
   }
 }
 
@@ -678,39 +862,34 @@ class _HomeSearchListPageState extends State<_HomeSearchListPage> {
       stream: widget.filterTypeStream,
       needProvider: false,
       dataBuilder: (ctx, result, _) {
-        return ChangeNotifierProvider(
-          create: (_) => SearchListChangeNotifer(result: result),
-          child: Expanded(
-            child: Container(
-              child: Stack(
-                children: [
-                  Positioned.fill(
-                      top: 83,
-                      child: NetworkStreamBuilder<SearchListModel>(
-                        stream: widget.listStream,
-                        needProvider: false,
-                        dataBuilder: (c, listResult, _) {
-                          return StaggeredGridView.countBuilder(
-                            crossAxisCount: 4,
-                            shrinkWrap: true,
-                            crossAxisSpacing: 5,
-                            mainAxisSpacing: 5,
-                            itemCount: listResult.items.length,
-                            itemBuilder: (context, index) {
-                              return HomeTabItemWidget(model: listResult.items[index]);
-                            },
-                            staggeredTileBuilder: (index) => StaggeredTile.fit(2),
-                          );
-                        },
-                      )),
-                  _HomeSearchListConditionWidget(
-                    confirmCallback: () {
-                      final notifer = context.read<SearchListChangeNotifer>();
-                      widget.refreshListCallback(notifer.selectSubTypes);
-                    },
-                  ),
-                ],
-              ),
+        context.read<SearchListChangeNotifer>().setFilterTypeResult(result);
+        return Expanded(
+          child: Container(
+            child: Stack(
+              children: [
+                Positioned.fill(
+                    top: 83,
+                    child: NetworkStreamBuilder<SearchListModel>(
+                      stream: widget.listStream,
+                      needProvider: false,
+                      dataBuilder: (c, listResult, _) {
+                        return StaggeredGridView.countBuilder(
+                          crossAxisCount: 4,
+                          shrinkWrap: true,
+                          crossAxisSpacing: 5,
+                          mainAxisSpacing: 5,
+                          itemCount: listResult.items.length,
+                          itemBuilder: (context, index) {
+                            return HomeTabItemWidget(model: listResult.items[index]);
+                          },
+                          staggeredTileBuilder: (index) => StaggeredTile.fit(2),
+                        );
+                      },
+                    )),
+                _HomeSearchListConditionWidget(
+                  confirmCallback: widget.refreshListCallback,
+                ),
+              ],
             ),
           ),
         );
@@ -720,7 +899,7 @@ class _HomeSearchListPageState extends State<_HomeSearchListPage> {
 }
 
 class _HomeSearchListConditionWidget extends StatefulWidget {
-  final VoidCallback confirmCallback;
+  final RefreshSearchListCallback confirmCallback;
   _HomeSearchListConditionWidget({required this.confirmCallback});
   @override
   State<StatefulWidget> createState() {
@@ -736,7 +915,9 @@ class _HomeSearchListConditionWidgetState extends State<_HomeSearchListCondition
       child: Column(
         children: [
           _HomeSearchListSortWidget(
-            filterCallback: () {},
+            filterCallback: () {
+              Scaffold.of(context).openEndDrawer();
+            },
             sortTypeCallback: (type) {},
           ),
           searchFilterWidget(context.watch<SearchListChangeNotifer>().selectType != -1),
@@ -778,7 +959,8 @@ class _HomeSearchListConditionWidgetState extends State<_HomeSearchListCondition
   }
 
   void didClickConfirm() {
-    widget.confirmCallback();
+    final notifer = context.read<SearchListChangeNotifer>();
+    widget.confirmCallback(notifer.selectSubTypes);
   }
 }
 
@@ -912,16 +1094,27 @@ class _HomeSearchFilterWidgetState extends State<_HomeSearchFilterWidget> {
   }
 
   List<Widget> _buildContent() {
-    final notifier = context.watch<SearchListChangeNotifer>();
-    final selectType = notifier.selectType;
-    final result = notifier.result;
+    final notifer = context.watch<SearchListChangeNotifer>();
+    final selectType = notifer.selectType;
+    final result = notifer.result;
     final typeList = result.fliterTypes.map((e) => e.describe).toList();
+    if (notifer.selectSubTypes.isNotEmpty) {
+      notifer.selectSubTypes.forEach((type, subtypes) {
+        final typeModel = result.fliterTypes.where((element) => element.filterType == type).first;
+        final describeList = typeModel.filterSubtypes.where((element) => subtypes.contains(element.subtype)).map((e) => e.describe);
+        if (describeList.isNotEmpty) {
+          final describe = describeList.join(",");
+          final index = typeList.indexOf(typeModel.describe);
+          typeList.replaceRange(index, index + 1, [describe]);
+        }
+      });
+    }
     List<Widget> widgets = [];
     widgets.add(Padding(
       padding: EdgeInsets.symmetric(horizontal: 5),
       child: Row(
-        children: typeList.sublist(0, 2).asMap().keys.map((e) {
-          return _typeItemWidget(typeList[e], e);
+        children: typeList.sublist(0, 3).asMap().keys.map((e) {
+          return _typeItemWidget(typeList[e], result.fliterTypes[e].filterType);
         }).toList(),
       ),
     ));
@@ -933,30 +1126,39 @@ class _HomeSearchFilterWidgetState extends State<_HomeSearchFilterWidget> {
     return widgets;
   }
 
-  Widget _typeItemWidget(String title, int index) {
-    bool isExpand = index == context.watch<SearchListChangeNotifer>().selectType;
+  Widget _typeItemWidget(String title, int type) {
+    bool isExpand = type == context.watch<SearchListChangeNotifer>().selectType;
     return Expanded(
       flex: 1,
       child: Container(
         height: 35,
         child: GestureDetector(
           onTap: () {
-            didSelectItem(index);
+            didSelectItem(type);
           },
           child: Container(
             margin: EdgeInsets.only(left: 5, right: 5, bottom: isExpand ? 0 : 10),
             height: 25,
-            decoration: BoxDecoration(color: YXColorGray16, borderRadius: isExpand ? BorderRadius.only(topLeft: Radius.circular(12.5), topRight: Radius.circular(12.5)) : BorderRadius.all(Radius.circular(12.5))),
+            decoration: BoxDecoration(
+              color: YXColorGray16,
+              borderRadius: isExpand ? BorderRadius.only(topLeft: Radius.circular(12.5), topRight: Radius.circular(12.5)) : BorderRadius.all(Radius.circular(12.5)),
+            ),
             child: Align(
               alignment: Alignment.topCenter,
               child: Padding(
-                padding: EdgeInsets.only(top: 5),
+                padding: EdgeInsets.only(top: 4),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text(
-                      title,
-                      style: TextStyle(fontSize: 12, color: isExpand ? redTextColor : Colors.black, fontWeight: FontWeight.normal),
+                    ConstrainedBox(
+                      constraints: BoxConstraints(maxWidth: 90),
+                      child: Text(
+                        title,
+                        style: TextStyle(fontSize: 12, color: isExpand ? redTextColor : Colors.black, fontWeight: FontWeight.normal),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        softWrap: false,
+                      ),
                     ),
                     SizedBox(
                       width: 5,
@@ -987,7 +1189,7 @@ class _HomeSearchFilterWidgetState extends State<_HomeSearchFilterWidget> {
         children: subtypeList.map((e) {
           return CommonButton(
             isInnerControlSelectState: false,
-            isSelect: list?.contains(subtypeList.indexOf(e)) ?? false,
+            isSelect: list?.contains(e.subtype) ?? false,
             width: (MediaQuery.of(context).size.width - 40) / 2,
             height: 50,
             onTap: (isSelecct) {
@@ -1029,6 +1231,7 @@ class _HomeSearchFilterWidgetState extends State<_HomeSearchFilterWidget> {
           flex: 1,
           child: CommonButton(
             height: 40,
+            decoration: BoxDecoration(color: Colors.white),
             onTap: (_) => didSelectReset(),
             child: Center(
               child: Text(
@@ -1061,16 +1264,20 @@ class _HomeSearchFilterWidgetState extends State<_HomeSearchFilterWidget> {
       child: GestureDetector(
         behavior: HitTestBehavior.opaque,
         child: Container(color: YXColorBlackAlpha50),
+        onTap: () {
+          final notifer = context.read<SearchListChangeNotifer>();
+          notifer.selectType = -1;
+        },
       ),
     );
   }
 
-  void didSelectItem(int index) {
+  void didSelectItem(int type) {
     final notifier = context.read<SearchListChangeNotifer>();
-    if (notifier.selectType == index) {
+    if (notifier.selectType == type) {
       notifier.selectType = -1;
     } else {
-      notifier.selectType = index;
+      notifier.selectType = type;
     }
   }
 
@@ -1090,5 +1297,7 @@ class _HomeSearchFilterWidgetState extends State<_HomeSearchFilterWidget> {
 
   void didSelectConfirm() {
     widget.confirmCallBack();
+    final notifer = context.read<SearchListChangeNotifer>();
+    notifer.selectType = -1;
   }
 }
